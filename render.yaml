@@ -1,0 +1,15 @@
+services:
+  - type: web
+    plan: free
+    region: frankfurt
+    name: subbie-portal
+    runtime: python
+    rootDir: src
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
+    buildCommand: |
+      pip install uv;
+      uv sync --frozen;
+    startCommand: "uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT"
