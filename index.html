@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SDC Supply Chain Compliance Portal</title>
+<style>
+:root{--navy:#063a73;--navy2:#0C57A5;--acc:#0C57A5;--acc2:#1e7be0;--bg:#f2f4f8;--card:#fff;--line:#e1e6ed;--txt:#1c2633;--mut:#6b7787;
+--red:#d93025;--amber:#e09b00;--green:#1e9e57;--grey:#8a949e;--purple:#7d68b8;--blue:#2a7de1}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#eef4fb,#f4f7fb) fixed;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--txt);font-size:14px}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:14px}
+a{color:var(--blue)}
+.hidden{display:none!important}
+.login{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.login-hero{background:linear-gradient(135deg,#04285a 0%,#0C57A5 55%,#2f8ae8 100%);color:#fff;padding:60px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.login-hero:after{content:"";position:absolute;right:-120px;bottom:-120px;width:420px;height:420px;border-radius:50%;border:60px solid rgba(255,255,255,.12)}
+.login-hero h1{font-size:40px;margin:10px 0 8px;line-height:1.1}
+.login-hero p{opacity:.85;font-size:16px;max-width:460px}
+.logo{display:inline-flex;align-items:center;gap:10px;font-weight:800;letter-spacing:1px}
+.lg{background:#fff;padding:6px 10px;border-radius:9px;display:inline-flex;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.lg img{height:26px;display:block}.login-hero .lg img{height:40px}
+.hero-feats{margin-top:30px;display:grid;gap:12px;max-width:460px}
+.hero-feats div{background:rgba(255,255,255,.1);padding:12px 14px;border-radius:10px;font-size:14px}
+.login-box{display:flex;align-items:center;justify-content:center;padding:30px}
+.login-card{background:#fff;border-radius:16px;box-shadow:0 10px 40px rgba(15,39,66,.12);padding:32px;width:100%;max-width:420px}
+.tabs{display:flex;background:var(--bg);border-radius:10px;padding:4px;margin-bottom:20px}
+.tabs button{flex:1;border:0;background:none;padding:10px;border-radius:8px;font-weight:600;color:var(--mut)}
+.tabs button.on{background:#fff;color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.demo-hint{background:#eaf3fd;border:1px solid #b9d3f1;color:#0a4588;padding:10px 12px;border-radius:8px;font-size:12.5px;margin-top:14px}
+.shell{display:flex;min-height:100vh}
+.side{width:236px;min-height:100vh;background:linear-gradient(180deg,#0C57A5 0%,#073f7e 55%,#04285a 100%);color:#d6e3f3;flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.side .brand{padding:18px 18px 10px;color:#fff}
+.side .brand small{display:block;color:#b5cbe6;font-size:11.5px;margin-top:6px;line-height:1.35}
+.side nav{flex:1;overflow:auto;padding:8px}
+.side nav a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#d6e3f3;text-decoration:none;font-size:13.5px;margin-bottom:2px}
+.side nav a:hover{background:rgba(255,255,255,.09)}
+.side nav a.on{background:#fff;color:var(--navy2);font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.side nav a .cnt{margin-left:auto;background:rgba(255,255,255,.2);border-radius:10px;padding:1px 8px;font-size:11.5px}
+.side nav a.on .cnt{background:var(--navy2);color:#fff}
+.side .me{padding:14px 16px;border-top:1px solid rgba(255,255,255,.12);font-size:12.5px}
+.side .me button{margin-top:8px;width:100%;background:rgba(255,255,255,.12);color:#fff;border:0;padding:7px;border-radius:6px}
+.main{flex:1;min-width:0}
+.top{background:#fff;border-bottom:1px solid var(--line);padding:14px 26px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+.top h2{margin:0;font-size:19px}
+.top .sp{flex:1}
+.top .today{color:var(--mut);font-size:12.5px}
+.bell{position:relative;border:1px solid var(--line);background:#fff;border-radius:50%;width:36px;height:36px;font-size:16px}
+.bell span{position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;border-radius:10px;font-size:10.5px;padding:1px 6px;font-weight:700}
+.content{padding:22px 26px 60px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:18px}
+.kpi{background:#fff;border-radius:12px;padding:16px;border:1px solid var(--line);position:relative;cursor:pointer;transition:.15s}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.06)}
+.kpi .n{font-size:30px;font-weight:800;line-height:1}
+.kpi .l{color:var(--mut);font-size:12.5px;margin-top:6px}
+.kpi:before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:4px;border-radius:0 4px 4px 0;background:var(--c,var(--navy))}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
+.card h3{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .sp{flex:1}
+.list-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.list-item:last-child{border-bottom:0}
+.list-item .grow{flex:1;min-width:0}
+.list-item .t{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list-item .s{color:var(--mut);font-size:12.5px}
+.empty{color:var(--mut);padding:16px;text-align:center;font-size:13px}
+.pill{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.p-red{background:#fde8e7;color:var(--red)}.p-amber{background:#fff4d6;color:#9a6a00}.p-green{background:#e3f5ea;color:#167a43}
+.p-grey{background:#eceff2;color:#5d6670}.p-purple{background:#eee9f8;color:var(--purple)}.p-blue{background:#e4effc;color:#1d64b8}
+.btn{border:1px solid var(--line);background:#fff;color:var(--txt);padding:7px 13px;border-radius:8px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn:hover{background:#f7f9fb}
+.btn.pri{background:linear-gradient(135deg,#1e7be0,#0C57A5);border-color:#0C57A5;color:#fff}.btn.pri:hover{background:#0a4a8f}
+.banner .btn.pri{background:#fff;color:#0C57A5;border-color:#fff}
+.btn.ok{background:var(--green);border-color:var(--green);color:#fff}
+.btn.warn{background:#fff;border-color:var(--amber);color:#9a6a00}
+.btn.bad{background:var(--red);border-color:var(--red);color:#fff}
+.btn.sm{padding:4px 9px;font-size:12px}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.toolbar input,.toolbar select{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.toolbar .sp{flex:1}
+.tbl-wrap{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:auto}
+table{width:100%;border-collapse:collapse}
+th{background:#f6f8fb;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.3px;color:var(--mut);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tr.click:hover td{background:#fafbfd;cursor:pointer}
+tr.sec td{background:#eef2f7;font-weight:700;color:var(--navy2);font-size:12.5px}
+tr.dim td{opacity:.6}
+td input.inl{padding:5px 7px;border:1px solid transparent;border-radius:6px;background:transparent;width:100%;min-width:110px}
+td input.inl:hover,td input.inl:focus{border-color:#cfd6df;background:#fff}
+.mut{color:var(--mut)}.small{font-size:12px}
+.tag{display:inline-block;background:#eef2f7;color:var(--navy2);padding:2px 7px;border-radius:5px;font-size:11px;font-weight:600}
+.sample{background:#fff1e6;color:#b4541b}
+.bar{height:8px;background:#edf0f4;border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:6px}
+.ring{width:130px;height:130px;border-radius:50%;display:grid;place-items:center;margin:auto}
+.ring div{width:100px;height:100px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center}
+.ring b{font-size:28px;display:block}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal .dh{font-size:12px;color:var(--mut);font-weight:700;text-align:center;padding:4px}
+.cal .d{background:#fff;border:1px solid var(--line);border-radius:8px;min-height:104px;padding:6px;font-size:11.5px;overflow:hidden}
+.cal .d.o{opacity:.45}.cal .d.t{border:2px solid var(--acc2)}
+.cal .d .dn{font-weight:700;font-size:12px;margin-bottom:4px}
+.cal .ev{display:block;padding:2px 5px;border-radius:4px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.modal{position:fixed;inset:0;background:rgba(10,25,45,.5);display:flex;align-items:flex-start;justify-content:center;z-index:50;overflow:auto;padding:30px 16px}
+.modal-card{background:#fff;border-radius:14px;width:100%;max-width:760px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-card.wide{max-width:980px}.modal-card.xwide{max-width:1180px}
+.mh{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mh h3{margin:0;font-size:17px;flex:1}
+.mb{padding:20px 22px;max-height:calc(100vh - 200px);overflow:auto}
+.mf{padding:14px 22px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;align-items:center}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fld{display:flex;flex-direction:column;gap:5px}
+.fld.full{grid-column:1/-1}
+.fld>span{font-size:12.5px;font-weight:600;color:#3b4756}
+.fld input,.fld select,.fld textarea{padding:9px 10px;border:1px solid #cfd6df;border-radius:8px;background:#fff;width:100%}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:2px solid #bcd8f6;border-color:var(--acc)}
+.req{color:var(--red)}
+.checks{display:flex;flex-wrap:wrap;gap:6px}
+.chk{background:#f4f6f9;border:1px solid var(--line);padding:6px 10px;border-radius:20px;font-size:12.5px;display:flex;gap:6px;align-items:center;cursor:pointer}
+.chk:has(input:checked){background:#e6f0fb;border-color:var(--acc)}
+.declare{flex-direction:row!important;align-items:flex-start;background:#f6f8fb;padding:12px;border-radius:8px;font-size:13px;gap:10px}
+.declare input{width:auto!important;flex-shrink:0;margin-top:3px}
+.declare:has(input:checked){background:#e3f5ea}
+.dl{display:grid;grid-template-columns:200px 1fr;gap:8px 16px;font-size:13.5px}
+.dl dt{color:var(--mut);font-weight:600}.dl dd{margin:0;white-space:pre-wrap}
+.thread{display:flex;flex-direction:column;gap:10px}
+.msg{padding:10px 12px;border-radius:10px;background:#f4f6f9;max-width:85%}
+.msg.me{align-self:flex-end;background:#e6f0fb}
+.msg .who{font-size:11.5px;color:var(--mut);margin-bottom:3px}
+.typecards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.typecard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;cursor:pointer;transition:.15s}
+.typecard:hover{border-color:var(--acc);transform:translateY(-2px)}
+.typecard .ic{font-size:26px}.typecard b{display:block;margin:6px 0 4px}
+.typecard small{color:var(--mut)}
+.banner{background:linear-gradient(120deg,#04285a 0%,#0C57A5 55%,#2f8ae8 100%);color:#fff;border-radius:14px;padding:20px 22px;margin-bottom:18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.banner h2{margin:0 0 4px}.banner p{margin:0;opacity:.88}
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.step{font-size:11.5px;padding:3px 8px;border-radius:12px;background:#eef2f7;color:var(--mut)}
+.step.done{background:#e3f5ea;color:#167a43}.step.cur{background:#e4effc;color:#1d64b8;font-weight:700}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.flow div{background:rgba(255,255,255,.12);border-radius:10px;padding:10px 12px;font-size:12.5px}
+.flow b{display:block;font-size:13.5px;margin-bottom:2px}
+.xl-head{background:#BDD7EE;padding:14px 18px;font-size:24px;font-weight:700;text-align:center;color:#0f2742}
+/* review sheet */
+.rs-head{display:flex;align-items:center;gap:16px;border-bottom:3px solid var(--navy2);padding-bottom:10px;margin-bottom:14px}
+.rs-head img{height:44px}.rs-head h2{margin:0;font-size:19px;color:var(--navy)}
+.rs table td,.rs table th{padding:7px 9px;font-size:13px}
+.rs tr.sh td{background:linear-gradient(90deg,#0C57A5,#2f8ae8);color:#fff;font-weight:700;font-size:13px}
+.rs td.it{width:46%}
+.yn{display:inline-flex;border:1px solid #cfd6df;border-radius:8px;overflow:hidden}
+.yn label{padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;color:#5d6670;border-right:1px solid #cfd6df}
+.yn label:last-child{border-right:0}
+.yn input{display:none}
+.yn label:has(input[value=Y]:checked){background:var(--green);color:#fff}
+.yn label:has(input[value=N]:checked){background:var(--red);color:#fff}
+.yn label:has(input[value=NA]:checked){background:#8a949e;color:#fff}
+.ans{display:inline-block;min-width:34px;text-align:center;border-radius:6px;padding:3px 6px;font-weight:700;font-size:12px;color:#fff}
+.ans.Y{background:var(--green)}.ans.N{background:var(--red)}.ans.NA{background:#8a949e}.ans.x{background:#eceff2;color:#99a}
+.rs input.c{width:100%;padding:5px 8px;border:1px solid #dfe5ec;border-radius:6px}
+.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat label{border:2px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;font-size:12.5px}
+.stat label b{font-size:22px;display:block;margin-bottom:4px}
+.stat label:has(input:checked){border-color:var(--acc);background:#e6f0fb}
+.stat input{display:none}
+.rednote{color:var(--red);font-weight:700;font-size:12.5px;border:1px solid #f6c2bf;background:#fff5f4;padding:10px;border-radius:8px}
+.sigpad{width:100%;height:150px;border:2px dashed #b9c3cf;border-radius:10px;background:#fff;touch-action:none;display:block}
+.op-top{background:linear-gradient(120deg,#04285a,#0C57A5);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.op-top small{opacity:.75}
+.op-wrap{max-width:780px;margin:0 auto;padding:18px 14px 80px}
+.op-step{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.op-step h2{margin:0 0 10px;font-size:18px;display:flex;align-items:center;gap:10px}
+.op-num{width:30px;height:30px;border-radius:50%;background:var(--acc2);color:#fff;display:inline-grid;place-items:center;font-size:15px;flex-shrink:0}
+.op-step.done .op-num{background:var(--green)}
+.vid{position:relative;padding-top:56.25%;border-radius:10px;overflow:hidden;background:#000;margin-bottom:12px}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.rams-box{border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px;background:#fbfcfe}
+.rams-box h4{margin:0 0 10px}
+.rules{margin:0 0 12px;padding-left:20px}.rules li{margin-bottom:4px}
+.big-ok{font-size:64px;text-align:center}
+.note{display:flex;gap:10px;padding:11px 6px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:8px}
+.note:hover{background:#f6f9fd}.note.un{background:#eef5fd}.note.un b{color:var(--navy2)}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 18px;border-radius:10px;font-size:13.5px;opacity:0;transition:.25s;pointer-events:none;z-index:99}
+#toast.show{opacity:1}
+#toast.err{background:var(--red)}
+@media(max-width:900px){
+ .login{grid-template-columns:1fr}.login-hero{padding:30px}.login-hero h1{font-size:28px}
+ .shell{flex-direction:column}.side{width:100%;height:auto;min-height:0;position:relative}
+ .side nav{display:flex;overflow-x:auto}.side nav a{white-space:nowrap}
+ .g2,.g3,.flow,.stat{grid-template-columns:1fr}.form{grid-template-columns:1fr}.dl{grid-template-columns:1fr}
+ .content{padding:16px}
+}
+@media print{.side,.top button,.toolbar,.btn{display:none!important}.content{padding:0}.tbl-wrap{border:0}td input.inl{border:0}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal" class="modal hidden" onmousedown="this._d=event.target===this" onclick="if(event.target===this&&this._d)closeModal()"><div class="modal-card" id="modalCard"></div></div>
+<div id="toast"></div>
+<script>
+const LOGO="data:image/png;base64,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";
+/* =====================================================================
+   SDC SUPPLY CHAIN COMPLIANCE PORTAL – prototype (single file, browser storage)
+   Seed data: SSOW CAT B tracker.xlsx & Papework Aide Memoir Tracker.xlsx
+   RAMS review: Contractor SoW Review & Tracking Form (BPS-XX-FM-HS-GN-004-R.08)
+   ===================================================================== */
+const LS='sdc_supply_portal_v1';
+const DAY=864e5;
+const TODAY=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const iso=d=>{d=new Date(d);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const P=s=>{if(!s)return null;const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const addDays=(s,n)=>{const d=P(s)||TODAY();d.setDate(d.getDate()+Number(n));return iso(d)};
+const daysTo=s=>Math.round((P(s)-TODAY())/DAY);
+const fmt=s=>{if(!s)return '—';const d=P(s);return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,10);
+const nextRev=r=>!r?'A':String.fromCharCode(Math.min(90,r.charCodeAt(0)+1));
+const $=id=>document.getElementById(id);
+
+/* ---------------- SDC SoW review sheet (from Rams Review TLS.docx) ---------------- */
+const RS=[
+ {s:'1. Management of Construction Works',i:['Specific activity details identified in Method Statement?','Sequence of works clearly identified in Method Statement?','Key project personnel details included? Project Manager, Contracts Manager, H&S Advisor?','Supervisor identified? All supervisors meet SDC minimum training requirements?','Labour Force. All operatives meet SDC minimum training requirements?','Control measures to eliminate slips, trips & falls within their work area identified?','Exclusion zones if needed i.e. open excavations, people working above etc.','Documentation to manage the sequence of works identified – work permits.']},
+ {s:'2. Asbestos',i:['R&D Survey in place if the building was constructed before the year 2000?','Asbestos Management Plan referred to in RAMS','Asbestos unexpected find procedure explained?','Labour Force. All operatives meet SDC minimum training requirements? UKATA Asbestos Awareness']},
+ {s:'3. Working at Height',i:['Work at Height – Hierarchy of control considered?','Type of Work at Height equipment identified? Details of inspection and maintenance schedule?','Labour Force. Training requirements identified. E.g. PASMA, IPAF, FASET','Are ladders or stepladders required to complete works? If so, has a specific Risk Assessment been completed?']},
+ {s:'4. Lifting Operations',i:['Lift plans and schedule of lifts completed and reviewed by the SDC Crane Coordinator or SDC Appointed Person','Lifting equipment fit for purpose and is a permit to lift needed.','Ground Bearing Pressures checked and assessed.','Overhead and underground hazards identified.','Labour Force. Training requirements identified. E.g. Crane supervisor, slinger/signaller, suspended loads.']},
+ {s:'5. Temporary Works',i:['Temporary Works system of work in line with TW design & sequence of installation/dismantle.','Scaffolding/Temporary Platforms requirements identified?','Safety Netting requirements identified?','Falling objects – Control measures identified?','Inspection requirements and responsible person identified. Temporary works co-ordinator/supervisor.']},
+ {s:'6. High Risk Activities',i:['Cutting processes – Control measures identified?','Confined Spaces – Control measures identified?','Demolition – Control measures identified?','Hot works – Control measures identified?','Lone working – Control measures identified?','Young Persons (apprentices, trainees) Specific RA developed.']},
+ {s:'7. Excavations including underground & overhead services',i:['Do the works need controlling with the SDC Orange Folder process, if so, has the brief been given?','Control measures to protect existing overhead and underground services identified?','Control measures to identify and locate underground services identified.','Control measures to prevent collapse of excavations identified?','Dewatering excavations. Methods identified?','Labour Force. Training requirements identified. E.g. CAT & Genny, NVQ2, NRSWA etc.']},
+ {s:'8. Plant & Work Equipment',i:['Local Exhaust Ventilation (LEV) Details of pre-use checks, maintenance and calibration identified.','Type of mechanical plant required for works identified. Details of inspection and maintenance schedule?','Type of portable tools required for works identified. Details of inspection and maintenance schedule?']},
+ {s:'9. Fire & Emergency',i:['Fire Risk Assessment for their specific work activities produced?','Specific First aid requirements identified?','Accident reporting procedure has been identified?']},
+ {s:'10. Occupational Health & Welfare',i:['Details of Dust Control measures?','Labour Force. Training requirements identified. E.g. Face fit testing','Hazardous Substances (COSHH) – COSHH assessments in place.','Manual Handling strategy clearly confirmed.','Noise mitigation measures in place i.e. protect everyone before protecting yourself','Vibration – monitoring arrangements been identified.','Additional PPE requirements have been confirmed above the normal 5-point PPE SDC policy.']},
+ {s:'11. Environmental',i:['Environmental Aspect and Impact assessment carried out by sub-contractor for their specific task.','Emergency Spill Plan developed.','Type of spill kits identified.','Fuel Storage and refuelling requirements identified.','COSHH storage requirements identified.','Waste disposal requirements and methods identified.','Pollution controls identified to protect, water, land, and air.']}];
+const RS_KEYS=RS.flatMap((s,si)=>s.i.map((_,ii)=>si+'_'+ii));
+const RS_STATUS={A:'These Risk Assessments and Method Statements are deemed sufficient to cover the requirements of SDC policies and procedures and are suitable for purpose.',
+ B:'All Site Manager comments must be incorporated before they can be accepted.',C:'Not accepted for implementation. Resubmission required.'};
+const RS_NOTE='Please note – ALL comments MUST be incorporated within the SoW before it will be accepted for implementation. Once Status A achieved, it does not relieve the contractor of their contractual obligations and ownership of the System of Work.';
+const RS_FORMREF='BPS-XX-FM-HS-GN-004-R.08';
+
+/* ---------------- document types ---------------- */
+const HAZ=['Working at height','Manual handling','Hot works','Dust / silica','Noise','Vibration (HAVS)','Electrical','Lifting operations','COSHH substances','Confined space','Excavation','Asbestos','Slips, trips & falls','Plant & vehicles','Lone working','Fire'];
+const PERMITS=['Hot works','Permit to break ground','Ladder permit','Working at height','Electrical isolation','Roof access','Confined space','Lifting plan'];
+const PPE=['Hard hat','Hi-vis','Safety boots','Gloves','Eye protection','Hearing protection','RPE / FFP3','Harness','Arc flash PPE'];
+const INSPECT=[
+ {k:'equip',l:'Equipment ID / description',t:'text',req:1,ph:'e.g. Step ladder L-04 / Tower T-02'},
+ {k:'location',l:'Location on site',t:'text'},
+ {k:'by',l:'Inspected by (competent person)',t:'text',req:1},
+ {k:'date',l:'Inspection date',t:'date',req:1,def:'today'},
+ {k:'result',l:'Result',t:'select',o:['Pass','Pass – minor defect noted','Fail – taken out of use'],req:1},
+ {k:'defects',l:'Defects found',t:'textarea'},
+ {k:'action',l:'Action taken',t:'textarea'},
+ {k:'file',l:'Photo / inspection record',t:'file'}];
+const FORMS={
+ ssow:[
+  {k:'title',l:'SSoW / RAMS title',t:'text',req:1,ph:'e.g. Drylining – Level 2 labs'},
+  {k:'category',l:'Category classification',t:'select',o:['A','B']},
+  {k:'prepared',l:'Date prepared',t:'date'},
+  {k:'areas',l:'Work areas / levels',t:'text',ph:'e.g. L1–L3, atrium'},
+  {k:'scope',l:'Scope of works',t:'textarea',req:1},
+  {k:'start',l:'Proposed commencement date',t:'date',req:1},
+  {k:'duration',l:'Duration (weeks)',t:'number'},
+  {k:'supervisor',l:'Site supervisor',t:'text',req:1},
+  {k:'supPhone',l:'Supervisor mobile',t:'tel'},
+  {k:'ops',l:'No. of operatives',t:'number'},
+  {k:'firstaider',l:'Nominated first aider',t:'text'},
+  {k:'sequence',l:'Sequence of works',t:'textarea'},
+  {k:'hazards',l:'Significant hazards',t:'checks',o:HAZ,req:1},
+  {k:'controls',l:'Control measures',t:'textarea',req:1},
+  {k:'plant',l:'Plant, tools & access equipment',t:'textarea'},
+  {k:'permits',l:'Permits required',t:'checks',o:PERMITS},
+  {k:'ppe',l:'PPE required',t:'checks',o:PPE},
+  {k:'emergency',l:'Emergency & rescue arrangements',t:'textarea'},
+  {k:'waste',l:'Waste & environmental controls',t:'textarea'},
+  {k:'changes',l:'What has changed since the last revision? (if resubmitting)',t:'textarea'},
+  {k:'file',l:'Attach full RAMS document',t:'file'},
+  {k:'declare',l:'I confirm this SSoW will be briefed to all operatives before work starts and signed briefing records kept on site.',t:'declare',req:1}],
+ coshh:[
+  {k:'product',l:'Product / substance',t:'text',req:1},{k:'supplier',l:'Manufacturer / supplier',t:'text'},
+  {k:'use',l:'Task / how used',t:'textarea',req:1},
+  {k:'hazards',l:'Hazard classification',t:'checks',o:['Flammable','Irritant','Corrosive','Toxic','Sensitiser','Carcinogen','Harmful to environment']},
+  {k:'controls',l:'Control measures',t:'textarea',req:1},{k:'ppe',l:'PPE',t:'checks',o:PPE},
+  {k:'firstaid',l:'First aid / spill measures',t:'textarea'},{k:'file',l:'Safety data sheet',t:'file'},
+  {k:'declare',l:'Assessment briefed to operatives using this product.',t:'declare',req:1}],
+ ins_el:[{k:'insurer',l:'Insurer',t:'text',req:1},{k:'policy',l:'Policy number',t:'text',req:1},{k:'limit',l:'Indemnity limit (£)',t:'text',ph:'e.g. 10,000,000'},{k:'start',l:'Start date',t:'date'},{k:'expiry',l:'Expiry date',t:'date',req:1},{k:'file',l:'Certificate',t:'file'}],
+ ladder:INSPECT,platform:INSPECT,puwer:INSPECT,loler:INSPECT,scaffold:INSPECT,
+ pat:[{k:'equip',l:'Batch / reference',t:'text',req:1,ph:'e.g. Q4 PAT test'},{k:'by',l:'Tested by',t:'text',req:1},{k:'date',l:'Test date',t:'date',req:1,def:'today'},{k:'count',l:'Items tested',t:'number'},{k:'failed',l:'Items failed / removed',t:'number'},{k:'result',l:'Result',t:'select',o:['Pass','Pass – minor defect noted','Fail – taken out of use'],req:1},{k:'file',l:'PAT register',t:'file'}],
+ asbestos:[{k:'title',l:'Plan title',t:'text',req:1},{k:'survey',l:'Survey reference',t:'text'},{k:'scope',l:'Scope / areas',t:'textarea',req:1},{k:'controls',l:'Controls & licensed contractor details',t:'textarea',req:1},{k:'file',l:'Plan document',t:'file'},{k:'declare',l:'Plan briefed to all affected operatives.',t:'declare',req:1}]
+};
+FORMS.ins_pl=FORMS.ins_el;
+const TYPES=[
+ {id:'ssow',name:'SSoW / RAMS',cat:'Safe System of Work',freq:42,approval:1,sheet:1,req:1,icon:'📋',titleKey:'title',desc:'Reviewed by SDC on the SoW Review & Tracking Form – 6-weekly reviews'},
+ {id:'coshh',name:'COSHH Assessment',cat:'Safe System of Work',freq:365,approval:1,icon:'🧪',titleKey:'product',desc:'One per hazardous product used on site'},
+ {id:'ins_el',name:"Employer's Liability Insurance",cat:'Insurance',freq:0,approval:1,req:1,icon:'🛡️',expiry:1,desc:'Certificate – tracked to expiry'},
+ {id:'ins_pl',name:'Public Liability Insurance',cat:'Insurance',freq:0,approval:1,req:1,icon:'🛡️',expiry:1,desc:'Certificate – tracked to expiry'},
+ {id:'ladder',name:'Ladder Inspection',cat:'Inspections (Sub-contractor HS&E)',freq:7,icon:'🪜',titleKey:'equip',desc:'Weekly'},
+ {id:'platform',name:'Working Platform Inspection',cat:'Inspections (Sub-contractor HS&E)',freq:7,icon:'🏗️',titleKey:'equip',desc:'Weekly – towers, podiums, MEWPs'},
+ {id:'puwer',name:'(PUWER) Plant & Work Equipment Inspection',cat:'Inspections (Sub-contractor HS&E)',freq:7,icon:'⚙️',titleKey:'equip',desc:'Weekly'},
+ {id:'loler',name:'(LOLER) Plant & Lifting Equipment Inspection',cat:'Inspections (Sub-contractor HS&E)',freq:7,icon:'🪝',titleKey:'equip',desc:'Weekly'},
+ {id:'scaffold',name:'Scaffold Inspection',cat:'Inspections (Sub-contractor HS&E)',freq:7,icon:'🧱',titleKey:'equip',desc:'Weekly / after adverse weather'},
+ {id:'pat',name:'Portable Appliance Testing Records',cat:'Inspections (Sub-contractor HS&E)',freq:90,icon:'🔌',titleKey:'equip',desc:'Every 3 months'},
+ {id:'asbestos',name:'Asbestos Management Plan',cat:'Safe System of Work',freq:0,approval:1,icon:'⚠️',titleKey:'title',desc:'As required'}
+];
+const T=id=>TYPES.find(t=>t.id===id)||{};
+const INSPECTION_TYPES=['ladder','platform','puwer','loler','scaffold','pat'];
+
+/* ---------------- status engine ---------------- */
+const ST={overdue:['Overdue','red'],due:['Due ≤ 7 days','amber'],indate:['In date','green'],review:['Awaiting SDC review','blue'],
+ awaitsub:['Review issued – awaiting sub response','amber'],disputed:['Disputed by subcontractor','red'],
+ rejected:['Revise & resubmit','red'],completed:['Completed','grey'],notonsite:['Not on site','purple'],asreq:['As required','grey'],
+ missing:['Missing','red'],expiring:['Expiring ≤ 30 days','amber'],defect:['Defect reported','red'],daily:['Daily / as required','grey'],expired:['Expired','red'],none:['Not applicable','grey'],
+ pending:['Sent – awaiting sign-off','amber'],complete:['Signed off','green'],resign:['Re-sign – RAMS revised','red'],cancelled:['Cancelled','grey'],never:['Not yet recorded','red']};
+const RANK=['missing','overdue','never','expired','disputed','rejected','defect','resign','due','expiring','awaitsub','pending','review','indate','complete','asreq','daily','notonsite','completed','cancelled','none'];
+const worst=a=>a.length?a.slice().sort((x,y)=>RANK.indexOf(x)-RANK.indexOf(y))[0]:'none';
+const pill=(st,txt)=>{const s=ST[st]||[st,'grey'];return `<span class="pill p-${s[1]}">${txt||s[0]}</span>`};
+function dueStatus(n,win=7){if(!n)return 'asreq';const k=daysTo(n);return k<0?'overdue':k<=win?'due':'indate'}
+const sub=id=>S.subs.find(s=>s.id===id);
+function effFlag(d){const s=sub(d.subId);return d.siteFlag||(s&&s.site!=='on site'?s.site:'')}
+function docStatus(d){
+ const f=effFlag(d);
+ if(f==='completed')return 'completed'; if(f==='not on site')return 'notonsite';
+ if(d.status==='submitted')return 'review';
+ if(d.status==='issued')return 'awaitsub';
+ if(d.status==='disputed')return 'disputed';
+ if(d.status==='rejected'||d.status==='actions')return 'rejected';
+ if(d.data&&d.data.result&&d.data.result.startsWith('Fail'))return 'defect';
+ return dueStatus(d.nextDue);
+}
+const isActive=d=>!['completed','notonsite'].includes(docStatus(d));
+const needsSdc=d=>['submitted','disputed'].includes(d.status);
+function dueText(n){if(!n)return '';const k=daysTo(n);return k<0?`${-k} day${k==-1?'':'s'} overdue`:k===0?'due today':`due in ${k} day${k==1?'':'s'}`}
+function opStatus(o){const s=sub(o.subId);if(s&&s.site!=='on site')return s.site==='completed'?'completed':'notonsite';if(!o.cscsExpiry)return 'missing';const k=daysTo(o.cscsExpiry);return k<0?'expired':k<=30?'expiring':'indate'}
+
+function compliance(subId){
+ const docs=S.docs.filter(d=>d.subId===subId);const s=sub(subId);
+ const items=[];
+ const ss=docs.filter(d=>d.type==='ssow');
+ items.push({k:'ssow',label:'SSoW / RAMS',st:ss.length?worst(ss.map(docStatus)):'missing'});
+ ['ins_el','ins_pl'].forEach(t=>{const x=docs.filter(d=>d.type===t);items.push({k:t,label:T(t).name,st:x.length?worst(x.map(docStatus)):'missing'})});
+ const ops=S.ops.filter(o=>o.subId===subId);
+ items.push({k:'ops',label:'Operative cards (CSCS)',st:ops.length?worst(ops.map(opStatus)):'missing'});
+ if(s&&s.site!=='on site')items.forEach(i=>i.st=s.site==='completed'?'completed':'notonsite');
+ const ok=items.filter(i=>['indate','due','expiring','review','awaitsub','completed','notonsite'].includes(i.st)).length;
+ return {items,score:Math.round(ok/items.length*100)};
+}
+
+/* ---------------- notifications ---------------- */
+function notify(to,text,act,icon){S.notes.unshift({id:uid(),to,text,act:act||'',icon:icon||'🔔',t:new Date().toISOString(),read:false});S.notes=S.notes.slice(0,300)}
+function myNotes(){if(!U)return [];return S.notes.filter(n=>U.kind==='sdc'?n.to==='sdc':n.to===U.subId)}
+function openNotes(){
+ const ns=myNotes();
+ openModal(`<div class="mh"><h3>🔔 Notifications</h3><button class="btn sm" onclick="myNotes().forEach(n=>n.read=true);save();closeModal();render()">Mark all read</button>${'Notification' in window&&Notification.permission!=='granted'?'<button class="btn sm" onclick="Notification.requestPermission().then(()=>toast(\'Desktop alerts: \'+Notification.permission))">🖥️ Enable desktop alerts</button>':''}<button class="btn ghost" onclick="closeModal()">✕</button></div>
+ <div class="mb">${ns.map(n=>`<div class="note ${n.read?'':'un'}" onclick="openNote('${n.id}')"><div style="font-size:20px">${n.icon}</div><div style="flex:1"><b>${esc(n.text)}</b><div class="small mut">${new Date(n.t).toLocaleString('en-GB')}</div></div>${n.read?'':'<span class="pill p-blue">New</span>'}</div>`).join('')||'<div class="empty">No notifications</div>'}</div>`);
+}
+function openNote(id){const n=S.notes.find(x=>x.id===id);n.read=true;save();closeModal();render();if(n.act)setTimeout(()=>{try{eval(n.act)}catch(e){}},0)}
+let seenNotes=new Set();
+function primeSeen(){myNotes().forEach(n=>seenNotes.add(n.id))}
+function alertNew(){
+ const fresh=myNotes().filter(n=>!n.read&&!seenNotes.has(n.id));fresh.forEach(n=>seenNotes.add(n.id));
+ if(!fresh.length)return;toast(fresh[0].icon+' '+fresh[0].text);
+ if('Notification' in window&&Notification.permission==='granted')fresh.forEach(n=>{try{new Notification('SDC Portal',{body:n.text})}catch(e){}});
+}
+/* live updates when another tab (e.g. subcontractor) changes data */
+window.addEventListener('storage',e=>{if(e.key!==LS||!e.newValue)return;try{S=migrate(JSON.parse(e.newValue))}catch(x){return}
+ if(location.hash.startsWith('#induct='))return;if(U&&$('modal').classList.contains('hidden'))render();alertNew()});
+
+/* ---------------- seed data (from trackers) ---------------- */
+function seedAide(){
+ const A=(sec,title,freqLabel,freqDays,last,link)=>({id:uid(),sec,title,freqLabel,freqDays,lastReviewed:last||'',nextDue:last&&freqDays>1?addDays(last,freqDays):'',owner:'',notes:'',link:link||'',log:[]});
+ const S1='3. Construction > 2. Health, Safety, Environmental > 1. Construction Phase Plan',
+  S2='3. Construction > 2. Health, Safety, Environmental > 2. Management of Construction Works > Site Specific Information // Forms',
+  S3='3. Construction > 5. Supply Chain > Sub-contractors > Sub-contractor name > 2. HS&E',
+  S4='3. Construction > 2. Health, Safety & Environmental > 5. Management of Lifting Operations',
+  S5='3. Construction > 2. Health, Safety, Environmental > 6. Management of Temporary Works',
+  S6='3. Construction > 2. Health, Safety & Environmental > 7. Management of Excavations, Underground & Overhead Services (Orange Folder)',
+  S7='3. Construction > 2. Health, Safety & Environmental > 8. Environmental Management';
+ const a=[
+  A(S1,'Construction Phase Plan Part A – Project-Specific','Monthly',30,'2026-08-13'),
+  A(S1,'Construction Phase Plan Part B - Logistics Plan','Monthly (or following significant changes)',30,'2026-08-13'),
+  A(S1,'Construction Phase Plan Part B - Hazard Impact Strategy','4 Weeks',28,'2026-07-31'),
+  A(S1,'Construction Phase Plan Part B - Fire Management Plan and Risk Assessment','Monthly (or following significant changes)',30,'2026-07-19'),
+  A(S2,'Safe Start','Daily',1),A(S2,'DABs','Daily',1),
+  A(S2,'Site Manager Weekly Inspection Report','Weekly',7,'2026-08-17'),
+  A(S2,'Site Fire Prevention Checklist','Monthly',30,'2026-07-24'),
+  A(S2,'Emergency Drill Assessment','6 monthly or significant change',180,'2026-08-13'),
+  A(S2,'First Aid Kit Inspection','Monthly',30,'2026-07-24'),
+  A(S2,'Register of Fire & Emergency Equipment','Weekly',7,'2026-08-13'),
+  A(S3,'Ladder inspections','Weekly',7,'','ladder'),
+  A(S3,'Ladder Permit','Daily',1),
+  A(S3,'Working Platform Inspection','Weekly',7,'','platform'),
+  A(S3,'(PUWER) Plant and Work Equipment Inspection','Weekly',7,'','puwer'),
+  A(S3,'Portable Appliance Testing Records','3 months',90,'','pat'),
+  A(S3,'Asbestos Management Plan','As Required',0,'','asbestos'),
+  A(S4,'(LOLER) Plant & Lifting Equipment Inspection','Weekly',7,'','loler'),
+  A(S4,'Plant & Lifting Equipment and Accessories Register','Weekly',7),
+  A(S5,'Temporary Works Register','As Required',0),
+  A(S5,'Temporary Works Inspection','Weekly',7,'2026-08-13'),
+  A(S5,'Scaffold Inspections','Weekly',7,'','scaffold'),
+  A(S6,'Orange Folder Strategy Agenda','Monthly',30,'2026-07-23'),
+  A(S6,'Supervisors Briefing','As Required',0),A(S6,'Permit to Break Ground','Daily',1),A(S6,'Excavation Inspection','Daily',1),
+  A(S7,'Spill Response Plan','Monthly',30),A(S7,'Enviromental Aspects & Impacts Assessment','Monthly',30)];
+ a.find(x=>x.title.startsWith('Emergency Drill')).nextDue='2027-02-09';
+ return a;
+}
+function sampleReview(d,s,code){
+ const items={};RS_KEYS.forEach(k=>items[k]={v:'Y',c:''});
+ ['1_0','1_1','1_2','1_3','3_0','3_1','3_2','3_4','6_0','6_1','6_2','6_3','6_4','6_5','7_0','5_3','5_4'].forEach(k=>items[k]={v:'NA',c:''});
+ if(code!=='A'){items['0_4']={v:'N',c:'Training matrix not included – provide PASMA / face-fit evidence for all operatives.'};
+  items['9_0']={v:'N',c:'Dust control: confirm on-tool extraction (M-class) for all board cutting; no dry sweeping.'};
+  items['2_3']={v:'Y',c:'Podium steps only – no ladders above 2 treads without SDC ladder permit.'};}
+ return {ref:'SoW-'+(S0counter++),contractor:s.name,title:d.title,category:'A',datePrepared:addDays(iso(TODAY()),-5),dateIssued:d.submitted,commence:addDays(iso(TODAY()),7),
+  project:'Project Merlin CAT B (B1981)',items,status:code,comments:code==='A'?'':'Incorporate the 2 items marked "No" and resubmit as Rev C.',reviewer:'Lewis G',position:'Site Manager',sig:'',date:addDays(iso(TODAY()),-1),nextDue:addDays(iso(TODAY()),41),round:1};
+}
+let S0counter=101;
+function seed(){
+ const subsRaw=[
+  ['Anglosax Lifts','Lifts','completed'],['Any Kitchen','Kitchen','on site'],['Ascot Doors','Steel doors','not on site'],['Cam Alarms','Fire alarm & security','on site'],
+  ['CityArch','Fume extract','not on site'],['Connect','Scaffolding','on site'],['CP Cleaning','Cleaning','not on site'],['DL Mechanical','Mechanical pipework','on site'],
+  ['Equip','Painting & decorating','on site'],['FGM','Carpentry / balustrade cladding','on site'],['GLW','—','not on site'],['Gridlocked','Drylining','on site'],
+  ['Hilton Cannon','Electrical','on site'],['Horton','Automated door closers','on site'],['Linear','Insulation','on site'],['McDaid Screeding','Screeding','completed'],
+  ['MPI','Lab gases','on site'],['PA Collacott','BMS','on site'],['Powell Flooring','Flooring','on site'],['Radi Partitions','Partitions / fit-out','on site'],
+  ['Richmond Ceramics','Wall & floor tiling','not on site'],['S+B','Lab furniture','on site'],['SDC (direct labour)','In-house','on site'],['Ventorex','Ductwork','on site'],['Wright Seal','Mastic','on site']];
+ const subs=subsRaw.map(([n,t,s])=>({id:uid(),name:n,trade:t,site:s,contact:'',email:'',phone:'',pin:'1234'}));
+ const id=n=>subs.find(s=>s.name===n).id;
+ const ss=[
+  ['Anglosax Lifts','Lift protection','2026-05-18','2026-06-29','Lewis G','completed'],
+  ['Ascot Doors','Installation of steel doors','2026-07-15','2026-08-12','Lewis G','not on site'],
+  ['Cam Alarms','Fire Alarm & Security','2026-07-27','2026-08-24','Ben G',''],
+  ['FGM','Install atrium carpentry','2026-02-23','2026-03-23','Lewis G','not on site'],
+  ['CityArch','Fume Extract','2026-07-01','2026-07-29','Ben G','not on site'],
+  ['Connect','Scaffolding','2026-07-23','2026-08-20','Lewis G',''],
+  ['DL Mechanical','Pipework Installation','2026-07-13','2026-08-10','Ben G',''],
+  ['Equip','Internal and External P&D','2026-08-05','2026-09-02','Jack P',''],
+  ['FGM','Balustrade Cladding','2026-07-17','2026-08-14','Lewis G',''],
+  ['Gridlocked','Drylining','2026-08-05','2026-09-02','Lewis G',''],
+  ['Richmond Ceramics','Wall and Floor tiling (including grouting)','2026-03-31','2026-04-28','Jack P','not on site'],
+  ['Horton','Installation of automated door closers','2026-08-13','2026-09-22','Lewis G',''],
+  ['Hilton Cannon','Electrical','2026-07-13','2026-08-10','Ben G',''],
+  ['Linear','Insulation','2026-07-27','2026-08-24','Ben G',''],
+  ['McDaid Screeding','Screeding','2026-05-22','2026-07-03','Tom B','completed'],
+  ['MPI','Installation of Lab Gases','2026-07-14','2026-08-11','Ben G',''],
+  ['Radi Partitions','Glass Replacement','2026-05-26','2026-06-26','Tom B','not on site'],
+  ['Radi Partitions','Fit-out','2026-07-15','2026-08-24','Lewis G',''],
+  ['PA Collacott','BMS','2026-07-22','2026-08-19','Ben G',''],
+  ['Powell Flooring','Flooring works','2026-07-27','2026-08-24','Lewis G',''],
+  ['SDC (direct labour)','Handyman','2026-06-04','2026-07-09','Tom B','not on site'],
+  ['SDC (direct labour)','Site Engineers (PCO)','2026-02-27','2026-03-27','Tom B','not on site'],
+  ['SDC (direct labour)','Labourer','2026-07-16','2026-08-13','Tom B',''],
+  ['SDC (direct labour)','Cleaner (PCO)','2026-08-13','2026-09-10','Tom B',''],
+  ['Ventorex','Ductwork install','2026-07-13','2026-08-10','Ben G',''],
+  ['Wright Seal','Mastic works','2026-08-05','2026-09-02','Lewis G','']];
+ const docs=ss.map(([c,t,r,n,by,f])=>({id:uid(),subId:id(c),type:'ssow',title:t,rev:'A',status:'approved',code:'A',submitted:r,reviewed:r,reviewer:by,nextDue:n,siteFlag:f,data:{title:t},history:[],comments:[],reviewLog:[{rev:'A',status:'A',dateReceived:r,dateSent:r,reviewer:by,position:'Site Manager',date:r,stage:'Imported – Status A',accepted:true}],periodic:[],src:'Imported from SSoW CAT B tracker'}));
+ const T0=iso(TODAY());
+ const g=docs.find(d=>d.title==='Drylining'),gs=subs.find(s=>s.name==='Gridlocked');
+ g.history.push({rev:'A',status:'approved',code:'A',reviewed:g.reviewed,reviewer:g.reviewer,nextDue:g.nextDue,data:{...g.data},date:g.reviewed});
+ Object.assign(g,{rev:'B',status:'issued',code:'B',submitted:addDays(T0,-3),sample:1,data:{title:'Drylining',category:'A',areas:'Levels 1–3 labs & offices',scope:'Metal stud partitions, MF ceilings and boarding to labs and office areas.',start:addDays(T0,7),supervisor:'Site supervisor (sample)',ops:'8',hazards:['Working at height','Manual handling','Dust / silica','Noise'],controls:'Podium steps only, no ladders above 2 steps. On-tool extraction for cutting. Exclusion zones when fixing ceilings.',permits:['Working at height'],ppe:['Hard hat','Hi-vis','Safety boots','Gloves','Eye protection','RPE / FFP3'],emergency:'Site first aider + SDC emergency procedure.',declare:true}});
+ g.review=sampleReview(g,gs,'B');
+ g.reviewLog.push({rev:'B',status:'B',dateReceived:g.submitted,dateSent:g.review.date,reviewer:'Lewis G',position:'Site Manager',date:g.review.date,stage:'Review issued'});
+ const h=docs.find(d=>d.title==='Electrical');
+ h.history.push({rev:'A',status:'approved',code:'A',reviewed:h.reviewed,reviewer:h.reviewer,nextDue:h.nextDue,data:{...h.data},date:h.reviewed});
+ Object.assign(h,{rev:'B',status:'submitted',submitted:addDays(T0,-1),sample:1,data:{title:'Electrical',category:'B',areas:'Plant room & risers',scope:'Containment, cabling, final fix and testing.',start:addDays(T0,10),supervisor:'Site supervisor (sample)',ops:'6',hazards:['Electrical','Working at height','Manual handling'],controls:'Safe isolation procedure, lock-off kits, permits for live work areas.',permits:['Electrical isolation'],ppe:['Hard hat','Hi-vis','Safety boots','Gloves','Arc flash PPE'],declare:true}});
+ docs.push({id:uid(),subId:id('Gridlocked'),type:'ins_el',title:"Employer's Liability Insurance",rev:'A',status:'approved',code:'A',submitted:'2026-09-01',reviewed:'2026-09-02',reviewer:'Matt Shiner',nextDue:addDays(T0,150),data:{insurer:'Sample insurer',policy:'SAMPLE-001',limit:'10,000,000',expiry:addDays(T0,150)},history:[],comments:[],sample:1});
+ docs.push({id:uid(),subId:id('Hilton Cannon'),type:'ins_pl',title:'Public Liability Insurance',rev:'A',status:'approved',code:'A',submitted:'2026-01-10',reviewed:'2026-01-12',reviewer:'Matt Shiner',nextDue:addDays(T0,5),data:{insurer:'Sample insurer',policy:'SAMPLE-002',limit:'10,000,000',expiry:addDays(T0,5)},history:[],comments:[],sample:1});
+ docs.push({id:uid(),subId:id('Connect'),type:'scaffold',title:'Main access scaffold – north elevation',rev:'',status:'logged',submitted:addDays(T0,-9),reviewed:addDays(T0,-9),reviewer:'',nextDue:addDays(T0,-2),data:{equip:'Main access scaffold – north elevation',by:'Scaffold inspector (sample)',date:addDays(T0,-9),result:'Pass'},history:[],comments:[],sample:1});
+ const ops=[{id:uid(),subId:id('Gridlocked'),name:'Sample operative 1',role:'Dryliner',cscsType:'Blue – Skilled worker',cscsNo:'',cscsExpiry:addDays(T0,400),certs:'PASMA',inducted:true,inductionDate:'2026-08-04',sample:1},
+  {id:uid(),subId:id('Gridlocked'),name:'Sample operative 2',role:'Dryliner',cscsType:'Blue – Skilled worker',cscsNo:'',cscsExpiry:addDays(T0,20),certs:'',inducted:false,inductionDate:'',sample:1},
+  {id:uid(),subId:id('Hilton Cannon'),name:'Sample operative 3',role:'Electrician',cscsType:'ECS Gold',cscsNo:'',cscsExpiry:addDays(T0,-3),certs:'IPAF 3a/3b',inducted:true,inductionDate:'2026-07-10',sample:1}];
+ const X={v:1,aideV:2,project:{name:'Project Merlin CAT B',number:'B1981',location:'Cowley Road, Cambridge, CB4 0DL',sdcEmail:''},
+  staff:[{name:'Matt Shiner',role:'Assistant Quantity Surveyor'},{name:'Lewis G',role:'Site Manager'},{name:'Ben G',role:'Site Manager'},{name:'Jack P',role:'Site Manager'},{name:'Tom B',role:'Site Manager'}],
+  subs,docs,ops,aide:seedAide(),invites:[],notes:[],msgs:[{id:uid(),subId:id('Gridlocked'),from:'Gridlocked',fromSdc:false,date:new Date(Date.now()-3*DAY).toISOString(),text:'Updated drylining RAMS uploaded for the 6-weekly review (sample message).'}],
+  audit:[{t:new Date().toISOString(),who:'System',action:'Portal created – data imported from SSoW CAT B tracker & Paperwork Aide Memoir tracker'}],
+  freq:{ssow:42,coshh:365,pat:90,ladder:7,platform:7,puwer:7,loler:7,scaffold:7}};
+ X.notes.push({id:uid(),to:'sdc',text:'Hilton Cannon uploaded "Electrical" Rev B – SoW review required',act:`openDoc('${h.id}')`,icon:'📥',t:new Date(Date.now()-DAY).toISOString(),read:false});
+ X.notes.push({id:uid(),to:id('Gridlocked'),text:'SDC issued the SoW review for "Drylining" Rev B – Status B. Please accept or deny.',act:`openDoc('${g.id}')`,icon:'📝',t:new Date(Date.now()-DAY).toISOString(),read:false});
+ return X;
+}
+const DEFAULT_INDUCT={title:'SDC Site Induction',videoUrl:'',validDays:365,minutes:20,
+ rules:'Sign in and out at the gate every day\nFull PPE at all times – hard hat, hi-vis, safety boots, gloves and eye protection\nNo work starts until your RAMS has been briefed and signed\nReport all accidents, near misses and unsafe conditions to SDC straight away\nLadders only with an SDC ladder permit\nSmoking and vaping in designated areas only'};
+function seedInvites(X){
+ const g=X.subs.find(s=>s.name==='Gridlocked');if(!g)return;
+ const d=X.docs.find(x=>x.subId===g.id&&x.title==='Drylining');const ops=X.ops.filter(o=>o.subId===g.id);
+ if(!d||ops.length<2)return;const T0=iso(TODAY());
+ X.invites.push({id:uid(),token:uid()+uid(),subId:g.id,opName:ops[0].name,opId:ops[0].id,email:'',phone:'',docIds:[d.id],created:addDays(T0,-12),sentBy:'Gridlocked',sent:[{via:'email',t:addDays(T0,-12)}],
+  completed:addDays(T0,-11),signedAt:new Date(Date.now()-11*DAY).toISOString(),video:{watched:true,date:addDays(T0,-11)},rams:[{docId:d.id,rev:'A',title:'Drylining'}],details:{cscsType:'Blue – Skilled worker'},sig:'',sample:1});
+ X.invites.push({id:uid(),token:uid()+uid(),subId:g.id,opName:ops[1].name,opId:ops[1].id,email:'',phone:'',docIds:[d.id],created:addDays(T0,-1),sentBy:'Gridlocked',sent:[{via:'sms',t:addDays(T0,-1)}],sample:1});
+}
+function migrate(X){
+ if(!X.invites)X.invites=[];
+ if(!X.notes)X.notes=[];
+ if(!X.induction)X.induction={...DEFAULT_INDUCT};
+ if(X.aideV!==2){X.aide=seedAide();X.aideV=2}
+ if(!X.invitesSeeded){seedInvites(X);X.invitesSeeded=1}
+ X.docs.forEach(d=>{if(!d.reviewLog)d.reviewLog=[];if(!d.periodic)d.periodic=[];if(!d.comments)d.comments=[];if(!d.history)d.history=[]});
+ return X;
+}
+
+/* ---------------- state ---------------- */
+let S=migrate((()=>{try{const s=JSON.parse(localStorage.getItem(LS));if(s&&s.v===1&&s.sheetV===1)return s}catch(e){}const x=seed();x.sheetV=1;return x})());
+let U=JSON.parse(sessionStorage.getItem(LS+'_u')||'null');
+let V=U?(U.kind==='sdc'?'dash':'sdash'):'';
+let F={q:'',st:'',rev:'',site:'active',sub:''};
+let calRef=TODAY();calRef.setDate(1);
+let loginTab='sdc';
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){toast('Browser storage full – try smaller attachments','err')}}
+function audit(a,who){S.audit.unshift({t:new Date().toISOString(),who:who||(U?U.name:'System'),action:a});S.audit=S.audit.slice(0,500)}
+function toast(m,c){const t=$('toast');t.textContent=m;t.className='show '+(c||'');clearTimeout(t._t);t._t=setTimeout(()=>t.className='',3200)}
+function go(v){V=v;render();window.scrollTo(0,0)}
+function logout(){U=null;sessionStorage.removeItem(LS+'_u');render()}
+
+/* ---------------- login ---------------- */
+function renderLogin(){
+ $('app').innerHTML=`<div class="login">
+ <div class="login-hero"><div class="logo"><span class="lg"><img src="${LOGO}" alt="SDC"></span> SUPPLY CHAIN PORTAL</div>
+  <h1>Site paperwork,<br>reviewed on time.</h1>
+  <p>${esc(S.project.name)} · ${esc(S.project.number)} · ${esc(S.project.location)}</p>
+  <div class="hero-feats"><div>📋 Subcontractors upload RAMS – SDC is notified straight away</div>
+  <div>📝 SDC reviews on the SoW Review & Tracking Form – the subcontractor accepts or disputes it</div>
+  <div>🎬 Operatives watch the SDC induction video and sign the RAMS before they arrive</div></div></div>
+ <div class="login-box"><div class="login-card">
+  <div class="tabs"><button class="${loginTab==='sdc'?'on':''}" onclick="loginTab='sdc';renderLogin()">SDC team</button><button class="${loginTab==='sub'?'on':''}" onclick="loginTab='sub';renderLogin()">Subcontractor</button></div>
+  ${loginTab==='sdc'?`
+   <div class="form" style="grid-template-columns:1fr"><label class="fld"><span>Name</span><select id="lu">${S.staff.map(s=>`<option>${esc(s.name)}</option>`).join('')}</select></label>
+   <label class="fld"><span>Password</span><input type="password" id="lp" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"></label>
+   <button class="btn pri" style="justify-content:center;padding:11px" onclick="doLogin()">Sign in to SDC portal</button></div>
+   <div class="demo-hint">Prototype login – SDC password: <b>sdc123</b></div>`:`
+   <div class="form" style="grid-template-columns:1fr"><label class="fld"><span>Company</span><select id="lu">${S.subs.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select></label>
+   <label class="fld"><span>Access PIN</span><input type="password" id="lp" placeholder="PIN" onkeydown="if(event.key==='Enter')doLogin()"></label>
+   <button class="btn pri" style="justify-content:center;padding:11px" onclick="doLogin()">Sign in to subcontractor portal</button></div>
+   <div class="demo-hint">Prototype login – default PIN for every company: <b>1234</b>. Try <b>Gridlocked</b> to see a review waiting for acceptance.</div>`}
+ </div></div></div>`;
+}
+function doLogin(){
+ const u=$('lu').value,p=$('lp').value;
+ if(loginTab==='sdc'){if(p!=='sdc123')return toast('Incorrect password','err');const s=S.staff.find(x=>x.name===u);U={kind:'sdc',name:s.name,role:s.role};V='dash'}
+ else{const s=sub(u);if(p!==s.pin)return toast('Incorrect PIN','err');U={kind:'sub',name:s.name,subId:s.id};V='sdash'}
+ sessionStorage.setItem(LS+'_u',JSON.stringify(U));audit('Signed in');save();render();
+ const un=myNotes().filter(n=>!n.read).length;primeSeen();if(un)toast(`🔔 You have ${un} new notification${un==1?'':'s'}`);
+}
+
+/* ---------------- shell ---------------- */
+function render(){
+ if(!U){renderLogin();return}
+ const isS=U.kind==='sdc';
+ const q=S.docs.filter(needsSdc).length;
+ const unread=S.msgs.filter(m=>isS?(!m.fromSdc&&!m.readSdc):(m.subId===U.subId&&m.fromSdc&&!m.readSub)).length;
+ const aideOver=isS?S.aide.filter(a=>['overdue','never'].includes(aideStatus(a))).length:0;
+ const indAct=isS?S.invites.filter(i=>['pending','resign'].includes(inviteState(i))).length:S.invites.filter(i=>i.subId===U.subId&&['pending','resign'].includes(inviteState(i))).length;
+ const subRev=!isS?S.docs.filter(d=>d.subId===U.subId&&d.status==='issued').length:0;
+ const nUn=myNotes().filter(n=>!n.read).length;
+ const nav=isS?[['dash','📊','Dashboard'],['queue','📥','RAMS review queue',q],['ssow','📋','SSoW tracker'],['aide','🗂️','Paperwork Aide Memoir Tracker',aideOver],['induct','🎬','Pre-site inductions',indAct],['docs','🗃️','All sub documents'],['cal','📅','Calendar'],['subs','🏗️','Subcontractors'],['ops','👷','Operatives'],['msgs','💬','Messages',unread],['log','🕘','Activity log'],['settings','⚙️','Settings']]
+  :[['sdash','🏠','My dashboard'],['sreviews','📝','SDC reviews',subRev],['sinduct','🎬','Pre-site induction',indAct],['sdocs','🗃️','My documents'],['ssubmit','➕','Submit / update'],['sops','👷','Operatives'],['smsgs','💬','Messages',unread],['sprofile','🏢','Company profile']];
+ const titles=Object.fromEntries(nav.map(n=>[n[0],n[2]]));
+ $('app').innerHTML=`<div class="shell"><aside class="side"><div class="brand"><div class="logo"><span class="lg"><img src="${LOGO}" alt="SDC"></span><span style="font-size:13px">${isS?'Site Team':'Subcontractor'}</span></div>
+  <small>${esc(S.project.name)} · ${esc(S.project.number)}<br>${esc(S.project.location)}</small></div>
+  <nav>${nav.map(n=>`<a href="#" class="${V===n[0]?'on':''}" onclick="go('${n[0]}');return false"><span>${n[1]}</span>${n[2]}${n[3]?`<span class="cnt">${n[3]}</span>`:''}</a>`).join('')}</nav>
+  <div class="me"><b>${esc(U.name)}</b><br><span style="opacity:.75">${isS?esc(U.role):'Subcontractor account'}</span><button onclick="logout()">Sign out</button></div></aside>
+  <div class="main"><div class="top"><h2>${titles[V]||''}</h2><div class="sp"></div><span class="today">Today: ${fmt(iso(TODAY()))}</span>
+   <button class="bell" title="Notifications" onclick="openNotes()">🔔${nUn?`<span>${nUn}</span>`:''}</button>
+   ${isS?`<button class="btn sm" onclick="go('queue')">📥 ${q} to review</button>`:`<button class="btn sm" onclick="openSendInduct()">🎬 Send induction pack</button><button class="btn pri sm" onclick="go('ssubmit')">➕ Submit document</button>`}</div>
+  <div class="content" id="content"></div></div></div>`;
+ const views={dash:vDash,queue:vQueue,ssow:vSsow,docs:vDocs,aide:vAide,induct:vInduct,cal:vCal,subs:vSubs,ops:vOps,msgs:vMsgs,log:vLog,settings:vSettings,
+  sdash:vSDash,sreviews:vSReviews,sinduct:vSInduct,sdocs:vSDocs,ssubmit:vSSubmit,sops:vSOps,smsgs:vSMsgs,sprofile:vSProfile};
+ $('content').innerHTML=(views[V]||(()=>''))();
+}
+
+/* ---------------- shared bits ---------------- */
+function docRow(d,opts={}){
+ const st=docStatus(d),s=sub(d.subId);
+ return `<div class="list-item" style="cursor:pointer" onclick="openDoc('${d.id}')"><div style="font-size:20px">${T(d.type).icon||'📄'}</div>
+ <div class="grow"><div class="t">${opts.hideSub?'':esc(s?s.name:'')+' – '}${esc(d.title)} ${d.rev?`<span class="tag">Rev ${esc(d.rev)}</span>`:''} ${d.sample?'<span class="tag sample">sample</span>':''}</div>
+ <div class="s">${esc(T(d.type).name)} · ${d.status==='submitted'?'submitted '+fmt(d.submitted):d.status==='issued'?'review issued '+fmt(d.review&&d.review.date)+' – Status '+d.code:d.status==='disputed'?'disputed by subcontractor':(d.nextDue?'next review '+fmt(d.nextDue)+' · '+dueText(d.nextDue):'')}</div></div>${pill(st)}</div>`;
+}
+function kpi(n,l,c,go_){return `<div class="kpi" style="--c:var(--${c})" onclick="${go_||''}"><div class="n" style="color:var(--${c})">${n}</div><div class="l">${l}</div></div>`}
+function csvDownload(name,rows){const c=rows.map(r=>r.map(x=>`"${String(x??'').replace(/"/g,'""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/csv'}));a.download=name;a.click()}
+function openModal(html,wide){$('modalCard').className='modal-card'+(wide===2?' xwide':wide?' wide':'');$('modalCard').innerHTML=html;$('modal').classList.remove('hidden');$('modal').scrollTop=0}
+function closeModal(){$('modal').classList.add('hidden')}
+function mailto(to,subj,body){location.href=`mailto:${encodeURIComponent(to||'')}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`}
+function staffRole(n){const s=S.staff.find(x=>x.name===n);return s?s.role:''}
+
+/* signature pads */
+function initSig(id){const c=$(id);if(!c)return;const r=c.getBoundingClientRect(),k=window.devicePixelRatio||1;c.width=r.width*k;c.height=r.height*k;const x=c.getContext('2d');x.scale(k,k);x.lineWidth=2.4;x.lineCap='round';x.strokeStyle='#0a2a55';let on=false;c._dirty=false;
+ const p=e=>{const b=c.getBoundingClientRect();return [e.clientX-b.left,e.clientY-b.top]};
+ c.onpointerdown=e=>{on=true;try{c.setPointerCapture(e.pointerId)}catch(_){};x.beginPath();x.moveTo(...p(e))};
+ c.onpointermove=e=>{if(!on)return;x.lineTo(...p(e));x.stroke();c._dirty=true};
+ c.onpointerup=()=>on=false}
+function clearSig(id){const c=$(id);c.getContext('2d').clearRect(0,0,c.width,c.height);c._dirty=false}
+const signed=id=>$(id)&&$(id)._dirty;
+
+/* =========================== SDC VIEWS =========================== */
+function vDash(){
+ const act=S.docs.filter(isActive);
+ const over=act.filter(d=>['overdue','rejected','defect'].includes(docStatus(d)));
+ const due=act.filter(d=>docStatus(d)==='due');
+ const rev=S.docs.filter(needsSdc);
+ const waitSub=S.docs.filter(d=>d.status==='issued');
+ const aOver=S.aide.filter(a=>['overdue','never'].includes(aideStatus(a)));
+ const onsite=S.subs.filter(s=>s.site==='on site');
+ const opsX=S.ops.filter(o=>['expired','expiring'].includes(opStatus(o)));
+ const indP=S.invites.filter(i=>['pending','resign'].includes(inviteState(i)));
+ const up=S.docs.filter(d=>isActive(d)&&d.nextDue&&daysTo(d.nextDue)>=0&&daysTo(d.nextDue)<=14).map(d=>({d:d.nextDue,t:(sub(d.subId)||{}).name+' – '+d.title,on:`openDoc('${d.id}')`}))
+  .concat(S.aide.filter(a=>!a.link&&a.nextDue&&daysTo(a.nextDue)>=0&&daysTo(a.nextDue)<=14).map(a=>({d:a.nextDue,t:'SDC – '+a.title,on:`reviewAide('${a.id}')`}))).sort((a,b)=>a.d.localeCompare(b.d));
+ const bySub={};over.forEach(d=>(bySub[d.subId]=bySub[d.subId]||[]).push(d));
+ const hr=new Date().getHours();
+ return `<div class="banner"><div style="flex:1"><h2>${hr<12?'Morning':hr<17?'Afternoon':'Evening'} ${esc(U.name.split(' ')[0])} 👋</h2><p>${rev.length} RAMS waiting for an SDC review sheet · ${waitSub.length} waiting for the subcontractor to accept · ${over.length} sub documents overdue · ${aOver.length} Aide Memoir items overdue.</p></div>
+  <button class="btn pri" onclick="go('queue')">Start reviewing</button><button class="btn" onclick="remindAll()">✉️ Chase all overdue</button></div>
+ <div class="kpis">${kpi(rev.length,'RAMS awaiting SDC review','blue',"go('queue')")}${kpi(waitSub.length,'Reviews awaiting sub acceptance','amber',"go('queue')")}${kpi(over.length,'Sub docs overdue / to resubmit','red',"F.st='';go('docs')")}${kpi(due.length,'Sub docs due in 7 days','amber',"F.st='due';go('docs')")}
+ ${kpi(aOver.length,'Aide Memoir overdue','red',"go('aide')")}${kpi(indP.length,'Pre-site inductions outstanding','amber',"go('induct')")}${kpi(opsX.length,'CSCS cards expired / expiring','amber',"go('ops')")}</div>
+ <div class="grid g2">
+  <div class="card"><h3>📥 Needs your review sheet<span class="sp"></span><button class="btn sm" onclick="go('queue')">All</button></h3>${rev.slice(0,6).map(d=>docRow(d)).join('')||'<div class="empty">Nothing waiting – nice.</div>'}</div>
+  <div class="card"><h3>📅 Coming up (next 14 days)</h3>${up.slice(0,8).map(e=>`<div class="list-item" style="cursor:pointer" onclick="${e.on}"><span class="tag">${fmt(e.d)}</span><div class="grow"><div class="t">${esc(e.t)}</div></div>${pill(dueStatus(e.d))}</div>`).join('')||'<div class="empty">Nothing due in the next fortnight.</div>'}</div>
+  <div class="card"><h3>🚨 Overdue – chase these<span class="sp"></span><button class="btn sm" onclick="remindAll()">✉️ Chase all</button></h3>
+   ${Object.entries(bySub).sort((a,b)=>b[1].length-a[1].length).map(([sid,ds])=>`<div class="list-item"><div class="grow"><div class="t">${esc(sub(sid).name)}</div><div class="s">${ds.map(d=>esc(d.title)+' ('+(['rejected','actions'].includes(d.status)?'resubmit required':dueText(d.nextDue))+')').join(' · ')}</div></div><span class="pill p-red">${ds.length}</span><button class="btn sm" onclick="remind('${sid}')">✉️</button></div>`).join('')||'<div class="empty">No overdue documents.</div>'}</div>
+  <div class="card"><h3>📊 Paperwork status by subcontractor (on site)</h3>${onsite.map(s=>{const c=compliance(s.id);const col=c.score>=75?'green':c.score>=50?'amber':'red';return `<div class="list-item" style="cursor:pointer" onclick="openSub('${s.id}')"><div style="width:150px" class="t">${esc(s.name)}</div><div class="grow"><div class="bar"><i style="width:${c.score}%;background:var(--${col})"></i></div></div><b style="width:42px;text-align:right">${c.score}%</b></div>`}).join('')}</div>
+ </div>
+ <div class="card" style="margin-top:16px"><h3>🗂️ Paperwork Aide Memoir – overdue<span class="sp"></span><button class="btn sm" onclick="go('aide')">Open tracker</button></h3>${aOver.map(a=>{const i=aideInfo(a);return `<div class="list-item" style="cursor:pointer" onclick="${a.link?`F.type='${a.link}';F.site='active';go('docs')`:`reviewAide('${a.id}')`}"><div class="grow"><div class="t">${esc(a.title)}</div><div class="s">${esc(a.freqLabel)} · ${i.st==='never'?'no review recorded yet':'last reviewed '+fmt(i.last)+' · '+dueText(i.next)}${a.link?' · from subcontractor records':''}</div></div>${pill(i.st)}</div>`}).join('')||'<div class="empty">All Aide Memoir paperwork in date.</div>'}</div>`;
+}
+
+function vQueue(){
+ const rev=S.docs.filter(needsSdc).sort((a,b)=>(a.status==='disputed'?-1:0)-(b.status==='disputed'?-1:0)||a.submitted.localeCompare(b.submitted));
+ const wait=S.docs.filter(d=>d.status==='issued');
+ return `<p class="mut">Subcontractor uploads land here and you get a 🔔 notification. Complete the <b>SoW Review & Tracking Form</b> for each one – the subcontractor then sees your filled-in review and accepts or denies it. Disputed reviews come back to the top.</p>
+ <div class="tbl-wrap"><table><tr><th>Received</th><th>Waiting</th><th>Subcontractor</th><th>Document</th><th>Rev</th><th>Proposed start</th><th>Stage</th><th></th></tr>
+ ${rev.map(d=>`<tr class="click" onclick="openDoc('${d.id}')"><td>${fmt(d.submitted)}</td><td>${-daysTo(d.submitted)} day(s)</td><td><b>${esc(sub(d.subId).name)}</b></td><td>${T(d.type).icon} ${esc(d.title)} ${d.sample?'<span class="tag sample">sample</span>':''}</td><td>${esc(d.rev)}</td><td>${fmt(d.data&&d.data.start)}${d.data&&d.data.start&&daysTo(d.data.start)<7?' <span class="pill p-red">soon</span>':''}</td><td>${pill(docStatus(d))}</td><td><button class="btn pri sm">${d.type==='ssow'?'📝 Review sheet':'Review'}</button></td></tr>`).join('')||'<tr><td colspan="8" class="empty">Review queue is empty 🎉</td></tr>'}</table></div>
+ <h3 style="margin:22px 0 10px">⏳ Issued – waiting for subcontractor to accept</h3>
+ <div class="tbl-wrap"><table><tr><th>Issued</th><th>Subcontractor</th><th>Document</th><th>Rev</th><th>Status given</th><th>Reviewer</th><th></th></tr>
+ ${wait.map(d=>`<tr class="click" onclick="openDoc('${d.id}')"><td>${fmt(d.review&&d.review.date)}<div class="small mut">${-daysTo(d.review&&d.review.date||iso(TODAY()))} day(s) ago</div></td><td><b>${esc(sub(d.subId).name)}</b></td><td>${esc(d.title)}</td><td>${esc(d.rev)}</td><td><span class="tag">Status ${esc(d.code)}</span></td><td>${esc(d.review&&d.review.reviewer)}</td><td onclick="event.stopPropagation()"><button class="btn sm" onclick="chaseAccept('${d.id}')">✉️ Chase</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">Nothing waiting on subcontractors</td></tr>'}</table></div>`;
+}
+function chaseAccept(id){const d=S.docs.find(x=>x.id===id);notify(d.subId,`Reminder: please accept or deny SDC's review of "${d.title}" Rev ${d.rev}`,`openDoc('${d.id}')`,'⏰');S.msgs.push({id:uid(),subId:d.subId,from:U.name,fromSdc:true,date:new Date().toISOString(),text:`Please respond to the SDC review of ${d.title} Rev ${d.rev} (Status ${d.code}) – accept or deny in the portal.`});audit('Chased review response – '+sub(d.subId).name);save();render();toast('Reminder sent')}
+
+function filterBar(withType){
+ return `<div class="toolbar"><input placeholder="🔍 Search contractor or title" value="${esc(F.q)}" oninput="F.q=this.value;rerenderTable()" style="min-width:240px">
+ <select onchange="F.st=this.value;rerenderTable()"><option value="">All statuses</option>${['overdue','due','indate','review','awaitsub','disputed','rejected','defect','notonsite','completed'].map(s=>`<option value="${s}" ${F.st===s?'selected':''}>${ST[s][0]}</option>`).join('')}</select>
+ <select onchange="F.rev=this.value;rerenderTable()"><option value="">All reviewers</option>${[...new Set(S.docs.map(d=>d.reviewer).filter(Boolean))].map(r=>`<option ${F.rev===r?'selected':''}>${esc(r)}</option>`).join('')}</select>
+ ${withType?`<select onchange="F.type=this.value;rerenderTable()"><option value="">All document types</option>${TYPES.map(t=>`<option value="${t.id}" ${F.type===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select>`:''}
+ <select onchange="F.site=this.value;rerenderTable()"><option value="active" ${F.site==='active'?'selected':''}>Active only (hide not on site / completed)</option><option value="" ${F.site===''?'selected':''}>Show everything</option></select>
+ <span class="sp"></span>${withType?'':'<button class="btn sm" onclick="exportSsow()">⬇️ Export CSV</button><button class="btn sm" onclick="window.print()">🖨️ Print</button>'}</div>`;
+}
+function filtered(type){
+ return S.docs.filter(d=>(!type||d.type===type)&&(!F.type||type||d.type===F.type)).filter(d=>{const st=docStatus(d),s=sub(d.subId);
+  if(F.site==='active'&&!isActive(d))return false; if(F.st&&st!==F.st)return false; if(F.rev&&d.reviewer!==F.rev)return false;
+  if(F.q&&!(s.name+' '+d.title).toLowerCase().includes(F.q.toLowerCase()))return false; return true})
+  .sort((a,b)=>sub(a.subId).name.localeCompare(sub(b.subId).name)||a.title.localeCompare(b.title));
+}
+function rerenderTable(){const el=$('tblArea');if(el)el.innerHTML=V==='ssow'?ssowTable():docsTable()}
+function ssowTable(){
+ const rows=filtered('ssow');
+ const noSsow=S.subs.filter(s=>s.site==='on site'&&!S.docs.some(d=>d.subId===s.id&&d.type==='ssow'));
+ return `<div class="tbl-wrap"><table><tr><th>Contractor</th><th>SSoW title</th><th>Rev</th><th>Date reviewed</th><th>Next review date</th><th>Reviewed by</th><th>Current status</th><th>Sub-contractor status</th><th></th></tr>
+ ${rows.map(d=>{const st=docStatus(d);return `<tr class="click ${isActive(d)?'':'dim'}" onclick="openDoc('${d.id}')"><td><b>${esc(sub(d.subId).name)}</b></td><td>${esc(d.title)} ${d.sample?'<span class="tag sample">sample</span>':''}</td><td>${esc(d.rev)}</td><td>${fmt(d.reviewed)}</td><td>${fmt(d.nextDue)}<div class="small mut">${isActive(d)?dueText(d.nextDue):''}</div></td><td>${esc(d.reviewer)}</td><td>${pill(st)}</td>
+  <td onclick="event.stopPropagation()"><select onchange="setFlag('${d.id}',this.value)" style="padding:4px;border-radius:6px;border:1px solid var(--line)"><option value="" ${!d.siteFlag?'selected':''}>On site</option><option ${d.siteFlag==='not on site'?'selected':''}>not on site</option><option ${d.siteFlag==='completed'?'selected':''}>completed</option></select></td>
+  <td onclick="event.stopPropagation()" style="white-space:nowrap">${isActive(d)&&d.status==='approved'?`<button class="btn sm" onclick="periodicReview('${d.id}')">6-wk review</button>`:''}</td></tr>`}).join('')||'<tr><td colspan="9" class="empty">No matching SSoWs</td></tr>'}</table></div>
+ ${noSsow.length?`<div class="card" style="margin-top:14px;border-color:#f6c2bf"><h3>⚠️ On site with no SSoW on file</h3>${noSsow.map(s=>`<div class="list-item"><div class="grow t">${esc(s.name)}</div>${pill('missing')}<button class="btn sm" onclick="remind('${s.id}')">✉️ Request SSoW</button></div>`).join('')}</div>`:''}`;
+}
+function vSsow(){F.type='';return `<p class="mut">Live version of the <b>SSoW Review Tracker</b> (${esc(S.project.name)}). Systems of Work are reviewed at least every ${S.freq.ssow/7} weeks – use <b>6-wk review</b> to sign one off on the tracking form.</p>${filterBar(false)}<div id="tblArea">${ssowTable()}</div>`}
+function docsTable(){
+ const rows=filtered();
+ return `<div class="tbl-wrap"><table><tr><th>Contractor</th><th>Type</th><th>Title</th><th>Rev</th><th>Last reviewed / logged</th><th>Next due</th><th>Reviewer</th><th>Status</th></tr>
+ ${rows.map(d=>`<tr class="click ${isActive(d)?'':'dim'}" onclick="openDoc('${d.id}')"><td><b>${esc(sub(d.subId).name)}</b></td><td>${T(d.type).icon} ${esc(T(d.type).name)}</td><td>${esc(d.title)} ${d.sample?'<span class="tag sample">sample</span>':''}</td><td>${esc(d.rev)}</td><td>${fmt(d.reviewed)}</td><td>${fmt(d.nextDue)}<div class="small mut">${isActive(d)?dueText(d.nextDue):''}</div></td><td>${esc(d.reviewer)}</td><td>${pill(docStatus(d))}</td></tr>`).join('')||'<tr><td colspan="8" class="empty">No matching documents</td></tr>'}</table></div>`;
+}
+function vDocs(){return `${filterBar(true)}<div id="tblArea">${docsTable()}</div>`}
+function exportSsow(){csvDownload(`SSoW_tracker_${S.project.number}_${iso(TODAY())}.csv`,[['Contractor','SSoW Title','Rev','Date Reviewed','Next Review Date','Reviewed by','Current Status','Sub-contractor Status'],...filtered('ssow').map(d=>[sub(d.subId).name,d.title,d.rev,fmt(d.reviewed),fmt(d.nextDue),d.reviewer,ST[docStatus(d)][0],effFlag(d)||'on site'])])}
+function setFlag(id,v){const d=S.docs.find(x=>x.id===id);d.siteFlag=v;audit(`Set ${sub(d.subId).name} – ${d.title} to "${v||'on site'}"`);save();rerenderTable();toast('Status updated')}
+
+/* ---------- document viewer ---------- */
+function fieldVal(f,v){if(v==null||v===''||(Array.isArray(v)&&!v.length))return '<span class="mut">—</span>';if(f.t==='checks')return v.map(x=>`<span class="tag" style="margin:0 4px 4px 0">${esc(x)}</span>`).join('');if(f.t==='date')return fmt(v);if(f.t==='declare')return v?'✅ Confirmed':'—';if(f.t==='file')return v.data?`<a href="${v.data}" download="${esc(v.name)}">📎 ${esc(v.name)}</a>`:`📎 ${esc(v.name)} <span class="mut small">(file name only – too large to store in prototype)</span>`;return esc(v)}
+function stepsFor(d){
+ const names=['Uploaded','SDC review sheet','Sub accepts / denies','Status A – live','6-weekly reviews'];
+ const cur={submitted:1,disputed:1,issued:2,actions:0,rejected:0}[d.status]??4;
+ return `<div class="steps" style="margin-bottom:14px">${names.map((x,i)=>`<span class="step ${i<cur?'done':i===cur?'cur':''}">${x}</span>`).join('')}</div>`;
+}
+function openDoc(id){
+ const d=S.docs.find(x=>x.id===id);if(!d)return;
+ const s=sub(d.subId),t=T(d.type),st=docStatus(d),isS=U.kind==='sdc';
+ const fields=FORMS[d.type]||[];
+ const signedOps=d.type==='ssow'?S.invites.filter(i=>i.completed&&(i.rams||[]).some(r=>r.docId===d.id)):[];
+ const lastSub=(d.comments||[]).filter(c=>!c.sdc).slice(-1)[0];
+ let actions='';
+ if(isS){
+  if(t.sheet&&needsSdc(d))actions+=`<button class="btn pri" onclick="openReviewSheet('${d.id}')">📝 ${d.status==='disputed'?'Revise & re-issue review sheet':'Complete SDC review sheet'}</button>`;
+  else if(t.approval&&!t.sheet&&d.status==='submitted')actions+=`<button class="btn bad" onclick="decide('${d.id}','C')">C – Reject</button><button class="btn warn" onclick="decide('${d.id}','B')">B – Approve with comments</button><button class="btn ok" onclick="decide('${d.id}','A')">A – Approve</button>`;
+  if(!t.approval&&d.status!=='acknowledged')actions+=`<button class="btn ok" onclick="ack('${d.id}')">✔ Acknowledge</button>`;
+  if(t.sheet&&d.status==='approved'&&isActive(d))actions+=`<button class="btn" onclick="periodicReview('${d.id}')">🔁 Record 6-weekly review</button>`;
+  if(['approved','acknowledged','logged'].includes(d.status)&&isActive(d))actions+=`<button class="btn" onclick="requestUpdate('${d.id}')">✉️ Request update</button>`;
+ }else{
+  if(d.status==='issued')actions+=`<button class="btn bad" onclick="respondReview('${d.id}',false)">✖ Deny review</button><button class="btn ok" onclick="respondReview('${d.id}',true)">✔ Accept review</button>`;
+  else if(d.status!=='submitted'&&d.status!=='disputed'){
+   if(d.type==='ssow'&&approvedVersion(d))actions+=`<button class="btn" onclick="closeModal();openSendInduct(['${d.id}'])">🎬 Send to operatives</button>`;
+   actions+=`<button class="btn pri" onclick="openForm('${d.type}','${d.id}')">${t.approval?'Upload new revision':'Log new inspection'}</button>`;}
+ }
+ if(d.review)actions=`<button class="btn" onclick="printReview('${d.id}')">🖨️ Print review form</button>`+actions;
+ openModal(`<div class="mh"><span style="font-size:24px">${t.icon}</span><h3>${esc(s.name)} – ${esc(d.title)} ${d.rev?`<span class="tag">Rev ${esc(d.rev)}</span>`:''}</h3>${pill(st)}<button class="btn ghost" onclick="closeModal()">✕</button></div>
+ <div class="mb">${t.sheet?stepsFor(d):''}
+  ${!isS&&d.status==='issued'?`<div class="card" style="background:#fff7e0;border-color:#f1d27a;margin-bottom:14px">📝 SDC has completed the review sheet below and given <b>Status ${esc(d.code)}</b>. Read every comment, then <b>Accept</b> or <b>Deny</b> at the bottom.</div>`:''}
+  ${!isS&&d.status==='actions'?`<div class="card" style="background:#fde8e7;border-color:#f6c2bf;margin-bottom:14px">You accepted Status ${esc(d.code)}. Incorporate every SDC comment and upload a new revision.</div>`:''}
+  ${isS&&d.status==='disputed'&&lastSub?`<div class="card" style="background:#fde8e7;border-color:#f6c2bf;margin-bottom:14px"><b>${esc(s.name)} denied the review:</b><br>${esc(lastSub.text)}</div>`:''}
+  ${d.review&&['issued','actions','disputed','approved'].includes(d.status)?reviewReadonly(d):''}
+  <dl class="dl" style="margin-top:14px"><dt>Document type</dt><dd>${esc(t.name)}</dd><dt>Submitted</dt><dd>${fmt(d.submitted)}</dd>
+  ${t.approval?`<dt>Last SDC review</dt><dd>${fmt(d.reviewed)} ${d.reviewer?'by '+esc(d.reviewer):''} ${d.code?`<span class="tag">Status ${d.code}</span>`:''}</dd>`:''}
+  <dt>${t.expiry?'Expiry':'Next review / due'}</dt><dd>${fmt(d.nextDue)} ${d.nextDue?'· '+dueText(d.nextDue):''}</dd>${d.src?`<dt>Source</dt><dd class="mut">${esc(d.src)}</dd>`:''}
+  ${d.type==='ssow'?`<dt>Signed by operatives</dt><dd>${signedOps.length?signedOps.map(i=>`${esc(i.opName)} (Rev ${esc(i.rams.find(r=>r.docId===d.id).rev)}, ${fmt(i.completed)})`).join(', '):'<span class="mut">None yet</span>'}</dd>`:''}</dl>
+  <h4 style="margin:18px 0 8px">Submitted information</h4>
+  <dl class="dl">${fields.filter(f=>d.data[f.k]!==undefined).map(f=>`<dt>${esc(f.l.replace(/\.$/,''))}</dt><dd>${fieldVal(f,d.data[f.k])}</dd>`).join('')||'<dd class="mut">Imported record – no form data. Ask the subcontractor to upload the current version via the portal.</dd>'}</dl>
+  ${d.comments.length?`<h4 style="margin:18px 0 8px">Comments & responses</h4><div class="thread">${d.comments.map(c=>`<div class="msg ${c.sdc===isS?'me':''}"><div class="who">${esc(c.by)} · ${new Date(c.t).toLocaleString('en-GB')} ${c.code?'· Status '+c.code:''}</div>${esc(c.text)}</div>`).join('')}</div>`:''}
+  ${t.sheet&&(d.reviewLog.length||d.periodic.length)?trackingTables(d):''}
+ </div>
+ <div class="mf">${actions}<button class="btn" onclick="closeModal()">Close</button></div>`,true);
+}
+function trackingTables(d){
+ return `<h4 style="margin:18px 0 8px">Review tracking</h4><div class="tbl-wrap"><table><tr><th>Rev</th><th>Stage</th><th>Status</th><th>Date received</th><th>Date sent</th><th>Reviewer</th><th>Sub response</th></tr>
+ ${d.reviewLog.map(l=>`<tr><td>${esc(l.rev)}</td><td>${esc(l.stage||'')}</td><td><span class="tag">${esc(l.status)}</span></td><td>${fmt(l.dateReceived)}</td><td>${fmt(l.dateSent)}</td><td>${esc(l.reviewer)}<div class="small mut">${esc(l.position||'')}</div></td><td>${l.accepted===true?'✅ Accepted '+fmt(l.respDate):l.accepted===false?'✖ Denied '+fmt(l.respDate):'—'}</td></tr>`).join('')}</table></div>
+ <h4 style="margin:14px 0 8px">System of Work review dates (at least every 6 weeks)</h4><div class="tbl-wrap"><table><tr><th>Name</th><th>Position</th><th>Signature</th><th>Date</th><th>Notes</th></tr>
+ ${d.periodic.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.position)}</td><td>${p.sig?`<img src="${p.sig}" style="height:34px">`:'—'}</td><td>${fmt(p.date)}</td><td class="small">${esc(p.notes)}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">No 6-weekly reviews recorded yet</td></tr>'}</table></div>`;
+}
+
+/* ---------- SDC SoW review sheet ---------- */
+function openReviewSheet(id){
+ const d=S.docs.find(x=>x.id===id),s=sub(d.subId);
+ const prev=d.review||{};const items=prev.items||{};
+ const ref=prev.ref||('SoW-'+S.project.number+'-'+String(S.docs.filter(x=>x.review).length+1).padStart(3,'0'));
+ const nd=addDays(iso(TODAY()),S.freq.ssow||42);
+ const row=(k,txt)=>{const v=(items[k]||{}).v||'',c=(items[k]||{}).c||'';return `<tr><td class="it">${esc(txt)}</td><td style="white-space:nowrap"><span class="yn">${['Y','N','NA'].map(o=>`<label><input type="radio" name="rs_${k}" value="${o}" ${v===o?'checked':''} onchange="rsCount()">${o==='Y'?'Yes':o==='N'?'No':'N/A'}</label>`).join('')}</span></td><td><input class="c" id="rc_${k}" value="${esc(c)}" placeholder="Comment"></td></tr>`};
+ openModal(`<div class="mh"><h3>📝 Contractor SoW Review & Tracking Form – ${esc(s.name)}</h3><span class="tag">Rev ${esc(d.rev)}</span><span class="small mut" id="rsCnt"></span><button class="btn ghost" onclick="closeModal()">✕</button></div>
+ <div class="mb rs">
+  <div class="rs-head"><img src="${LOGO}" alt="SDC"><div style="flex:1"><h2>Contractor SoW Review & Tracking Form</h2><div class="small mut">${RS_FORMREF}</div></div><label class="fld" style="width:220px"><span>Reference number</span><input id="rsRef" value="${esc(ref)}"></label></div>
+  ${d.status==='disputed'?`<div class="card" style="background:#fde8e7;border-color:#f6c2bf;margin-bottom:12px"><b>Subcontractor's reason for denying:</b> ${esc(((d.comments||[]).filter(c=>!c.sdc).slice(-1)[0]||{}).text||'')}</div>`:''}
+  <div class="form" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+   <label class="fld"><span>Project</span><input id="rsP" value="${esc(prev.project||S.project.name+' ('+S.project.number+')')}"></label>
+   <label class="fld"><span>Contractor</span><input id="rsC" value="${esc(s.name)}"></label>
+   <label class="fld"><span>System of Work title</span><input id="rsT" value="${esc(d.title)}"></label>
+   <label class="fld"><span>Category classification</span><select id="rsCat">${['A','B'].map(x=>`<option ${(prev.category||d.data.category||'A')===x?'selected':''}>${x}</option>`).join('')}</select></label>
+   <label class="fld"><span>Date prepared</span><input type="date" id="rsDP" value="${esc(prev.datePrepared||d.data.prepared||'')}"></label>
+   <label class="fld"><span>Date issued to SDC</span><input type="date" id="rsDI" value="${esc(d.submitted)}"></label>
+   <label class="fld"><span>Proposed commencement date</span><input type="date" id="rsCD" value="${esc(prev.commence||d.data.start||'')}"></label>
+   <div class="fld"><span>RAMS document</span><div style="padding-top:8px">${d.data.file?fieldVal({t:'file'},d.data.file):'<span class="mut small">Form data only</span>'} <a href="#" onclick="openDocInfo('${d.id}');return false" class="small">View submission</a></div></div>
+  </div>
+  <div class="toolbar"><span class="small mut">Tip: use the quick buttons on each section heading, then change individual answers.</span></div>
+  <div class="tbl-wrap"><table>${RS.map((sec,si)=>`<tr class="sh"><td colspan="3" style="display:table-cell"><div style="display:flex;align-items:center;gap:8px">${esc(sec.s)}<span style="flex:1"></span><button class="btn sm" onclick="rsAll(${si},'Y')">All Yes</button><button class="btn sm" onclick="rsAll(${si},'NA')">All N/A</button></div></td></tr><tr><th>Item</th><th>Yes / No / N/A</th><th>Comments</th></tr>`+sec.i.map((txt,ii)=>row(si+'_'+ii,txt)).join('')).join('')}</table></div>
+  <h4 style="margin:18px 0 8px">Status</h4>
+  <div class="stat">${['A','B','C'].map(c=>`<label><input type="radio" name="rsStat" value="${c}" ${prev.status===c&&d.status!=='disputed'?'checked':''}><b>${c}</b>${esc(RS_STATUS[c])}</label>`).join('')}</div>
+  <label class="fld full" style="margin-top:12px"><span>Site Manager comments to subcontractor</span><textarea id="rsCom" rows="3">${esc(prev.comments||'')}</textarea></label>
+  <p class="rednote">${esc(RS_NOTE)}</p>
+  <h4 style="margin:18px 0 8px">Review details</h4>
+  <div class="form" style="grid-template-columns:repeat(4,1fr)"><label class="fld"><span>Name</span><input id="rsN" value="${esc(U.name)}"></label><label class="fld"><span>Position</span><input id="rsPos" value="${esc(U.role||'Site Manager')}"></label>
+  <label class="fld"><span>Date</span><input type="date" id="rsD" value="${iso(TODAY())}"></label><label class="fld"><span>Next review date (if Status A)</span><input type="date" id="rsNext" value="${nd}"></label></div>
+  <p class="small mut" style="margin:12px 0 6px">Signature</p><canvas id="rsSig" class="sigpad" style="max-width:460px"></canvas><button class="btn sm" style="margin-top:6px" onclick="clearSig('rsSig')">Clear signature</button>
+ </div>
+ <div class="mf"><span class="small mut" style="margin-right:auto">Issuing sends a 🔔 notification to ${esc(s.name)} to accept or deny.</span><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="issueReview('${d.id}')">Issue review to subcontractor</button></div>`,2);
+ initSig('rsSig');rsCount();
+}
+function openDocInfo(id){const d=S.docs.find(x=>x.id===id);const w=window.open('','_blank');if(!w)return;w.document.write(`<title>${esc(d.title)}</title><body style="font-family:Segoe UI,Arial;padding:24px"><h2>${esc(sub(d.subId).name)} – ${esc(d.title)} Rev ${esc(d.rev)}</h2><dl>${FORMS.ssow.filter(f=>d.data[f.k]!==undefined).map(f=>`<dt><b>${esc(f.l)}</b></dt><dd style="margin:0 0 10px">${fieldVal(f,d.data[f.k])}</dd>`).join('')}</dl></body>`)}
+function rsAll(si,v){RS[si].i.forEach((_,ii)=>{const r=document.querySelector(`input[name="rs_${si}_${ii}"][value="${v}"]`);if(r)r.checked=true});rsCount()}
+function rsCount(){const a=RS_KEYS.filter(k=>document.querySelector(`input[name="rs_${k}"]:checked`)).length;const n=RS_KEYS.filter(k=>document.querySelector(`input[name="rs_${k}"][value=N]:checked`)).length;const el=$('rsCnt');if(el)el.innerHTML=`${a}/${RS_KEYS.length} answered · <b style="color:${n?'var(--red)':'inherit'}">${n} No</b>`}
+function issueReview(id){
+ const d=S.docs.find(x=>x.id===id),s=sub(d.subId);
+ const items={};let miss=0,noC=0,nos=0;
+ RS_KEYS.forEach(k=>{const r=document.querySelector(`input[name="rs_${k}"]:checked`);const c=$('rc_'+k).value.trim();if(!r)miss++;else{if(r.value==='N'){nos++;if(!c)noC++}}items[k]={v:r?r.value:'',c}});
+ const stat=(document.querySelector('input[name=rsStat]:checked')||{}).value;
+ if(miss)return toast(`${miss} item(s) not answered – mark Yes, No or N/A`,'err');
+ if(noC)return toast(`Add a comment against every item marked "No" (${noC} missing)`,'err');
+ if(!stat)return toast('Choose Status A, B or C','err');
+ if(stat==='A'&&nos)return toast(`${nos} item(s) marked "No" – Status A not allowed. Use B or C.`,'err');
+ if(stat!=='A'&&!$('rsCom').value.trim()&&!nos)return toast('Add comments explaining what must change','err');
+ if(!signed('rsSig'))return toast('Sign the review','err');
+ const round=(d.review&&d.review.rev===d.rev?(d.review.round||1)+1:1);
+ d.review={ref:$('rsRef').value,project:$('rsP').value,contractor:$('rsC').value,title:$('rsT').value,category:$('rsCat').value,datePrepared:$('rsDP').value,dateIssued:$('rsDI').value,commence:$('rsCD').value,
+  items,status:stat,comments:$('rsCom').value.trim(),reviewer:$('rsN').value,position:$('rsPos').value,sig:$('rsSig').toDataURL('image/png'),date:$('rsD').value,nextDue:$('rsNext').value,round,rev:d.rev};
+ d.status='issued';d.code=stat;d.reviewer=d.review.reviewer;d.reviewed=d.review.date;
+ d.reviewLog.push({rev:d.rev,status:stat,dateReceived:d.submitted,dateSent:d.review.date,reviewer:d.review.reviewer,position:d.review.position,date:d.review.date,stage:round>1?'Re-issued after dispute':(d.reviewLog.some(l=>l.rev!==d.rev)?'Resubmission review':'Initial review')});
+ d.comments.push({by:U.name,sdc:1,t:new Date().toISOString(),code:stat,text:`SoW review issued – Status ${stat}${nos?` (${nos} item${nos>1?'s':''} marked No)`:''}.${d.review.comments?' '+d.review.comments:''}`});
+ notify(d.subId,`SDC issued the SoW review for "${d.title}" Rev ${d.rev} – Status ${stat}. Please accept or deny.`,`openDoc('${d.id}')`,'📝');
+ S.msgs.push({id:uid(),subId:d.subId,from:U.name,fromSdc:true,date:new Date().toISOString(),text:`SoW review for ${d.title} Rev ${d.rev}: Status ${stat}. Open "SDC reviews" to read the full review sheet and accept or deny.`});
+ S.notes.filter(n=>n.to==='sdc'&&n.act.includes(d.id)).forEach(n=>n.read=true);
+ audit(`SoW review issued – ${s.name} – ${d.title} Rev ${d.rev} – Status ${stat}`);save();closeModal();render();toast(`Review issued – ${s.name} notified`);
+ if(s.email&&confirm(`Also email ${s.name} (${s.email})?`))mailto(s.email,`${S.project.name} – SoW review: ${d.title} Rev ${d.rev} – Status ${stat}`,`Hi,\n\nSDC has reviewed ${d.title} Rev ${d.rev} – Status ${stat}.\n${RS_STATUS[stat]}\n\n${d.review.comments}\n\nPlease log in to the SDC Supply Chain Portal to read the full review sheet and accept or deny it.\n\nThanks,\n${U.name}`);
+}
+function reviewReadonly(d){
+ const r=d.review,s=sub(d.subId);
+ const flagged=RS.flatMap((sec,si)=>sec.i.map((txt,ii)=>({k:si+'_'+ii,txt,sec:sec.s}))).filter(x=>r.items[x.k]&&(r.items[x.k].v==='N'||r.items[x.k].c));
+ return `<div class="card rs" style="padding:16px;border-color:#b9d3f1"><div class="rs-head"><img src="${LOGO}" alt="SDC"><div style="flex:1"><h2>Contractor SoW Review & Tracking Form</h2><div class="small mut">Ref ${esc(r.ref)} · ${RS_FORMREF}</div></div><div style="text-align:center"><div class="small mut">Status</div><div style="font-size:34px;font-weight:800;color:${r.status==='A'?'var(--green)':r.status==='B'?'var(--amber)':'var(--red)'}">${esc(r.status)}</div></div></div>
+ <dl class="dl" style="grid-template-columns:170px 1fr 170px 1fr"><dt>Project</dt><dd>${esc(r.project)}</dd><dt>Contractor</dt><dd>${esc(r.contractor)}</dd><dt>System of Work</dt><dd>${esc(r.title)} (Rev ${esc(r.rev||d.rev)})</dd><dt>Category</dt><dd>${esc(r.category)}</dd>
+ <dt>Date prepared</dt><dd>${fmt(r.datePrepared)}</dd><dt>Date issued to SDC</dt><dd>${fmt(r.dateIssued)}</dd><dt>Proposed commencement</dt><dd>${fmt(r.commence)}</dd><dt>Reviewed by</dt><dd>${esc(r.reviewer)}, ${esc(r.position)} – ${fmt(r.date)}</dd></dl>
+ <p style="margin:12px 0 6px"><b>Status ${esc(r.status)}:</b> ${esc(RS_STATUS[r.status])}</p>
+ ${r.comments?`<p style="margin:0 0 10px"><b>Site Manager comments:</b> ${esc(r.comments)}</p>`:''}
+ ${flagged.length?`<h4 style="margin:12px 0 6px">Items needing your attention</h4><div class="tbl-wrap"><table>${flagged.map(x=>`<tr><td style="width:70px"><span class="ans ${r.items[x.k].v}">${r.items[x.k].v==='NA'?'N/A':r.items[x.k].v==='Y'?'Yes':'No'}</span></td><td><b>${esc(x.txt)}</b><div class="small mut">${esc(x.sec)}</div></td><td>${esc(r.items[x.k].c)}</td></tr>`).join('')}</table></div>`:''}
+ <details style="margin-top:10px"><summary style="cursor:pointer;font-weight:600;color:var(--navy2)">Show the full review sheet (${RS_KEYS.length} items)</summary>
+ <div class="tbl-wrap" style="margin-top:8px"><table>${RS.map((sec,si)=>`<tr class="sh"><td colspan="3">${esc(sec.s)}</td></tr>`+sec.i.map((txt,ii)=>{const it=r.items[si+'_'+ii]||{};return `<tr><td class="it">${esc(txt)}</td><td><span class="ans ${it.v||'x'}">${it.v==='NA'?'N/A':it.v==='Y'?'Yes':it.v==='N'?'No':'–'}</span></td><td class="small">${esc(it.c||'')}</td></tr>`}).join('')).join('')}</table></div></details>
+ <p class="rednote" style="margin-top:12px">${esc(RS_NOTE)}</p>
+ ${r.sig?`<div class="small mut">Signed: <img src="${r.sig}" style="height:40px;vertical-align:middle;border:1px solid var(--line);border-radius:6px;background:#fff"></div>`:''}
+ ${r.subResponse?`<div style="margin-top:8px" class="small">${r.subResponse.accepted?'✅ Accepted':'✖ Denied'} by ${esc(r.subResponse.name)} (${esc(r.subResponse.position)}) on ${fmt(r.subResponse.date)}${r.subResponse.reason?' – '+esc(r.subResponse.reason):''}</div>`:''}</div>`;
+}
+/* ---------- subcontractor accept / deny ---------- */
+function respondReview(id,accept){
+ const d=S.docs.find(x=>x.id===id),r=d.review;
+ const consequence=accept?(r.status==='A'?'Your RAMS becomes live (Status A achieved). You can then send it to operatives with the induction pack.':r.status==='B'?'You agree to incorporate every SDC comment. You will then need to upload a new revision for Status A.':'You agree the SoW is not accepted. You will need to resubmit a new revision.'):'SDC will be notified straight away and must review your reasons before re-issuing.';
+ openModal(`<div class="mh"><h3>${accept?'✔ Accept':'✖ Deny'} SDC review – ${esc(d.title)} Rev ${esc(d.rev)} (Status ${esc(r.status)})</h3><button class="btn ghost" onclick="closeModal()">✕</button></div><div class="mb">
+ <div class="card" style="margin-bottom:12px;background:${accept?'#e3f5ea':'#fde8e7'};border:0">${esc(consequence)}</div>
+ <div class="form"><label class="fld"><span>Your name *</span><input id="rrN"></label><label class="fld"><span>Position *</span><input id="rrP" placeholder="e.g. Contracts Manager"></label>
+ <label class="fld full"><span>${accept?'Comments (optional)':'Reason for denying – which items and why *'}</span><textarea id="rrR" rows="4" placeholder="${accept?'':'e.g. Item 3.4 – ladder RA is in Appendix C of the RAMS, page 14.'}"></textarea></label></div>
+ <p class="small mut" style="margin:12px 0 6px">Signature *</p><canvas id="rrSig" class="sigpad"></canvas><button class="btn sm" style="margin-top:6px" onclick="clearSig('rrSig')">Clear</button></div>
+ <div class="mf"><button class="btn" onclick="closeModal();openDoc('${d.id}')">Back</button><button class="btn ${accept?'ok':'bad'}" onclick="submitResponse('${d.id}',${accept})">${accept?'Accept review':'Deny & send back to SDC'}</button></div>`);
+ initSig('rrSig');
+}
+function submitResponse(id,accept){
+ const d=S.docs.find(x=>x.id===id),r=d.review,s=sub(d.subId);
+ const n=$('rrN').value.trim(),p=$('rrP').value.trim(),reason=$('rrR').value.trim();
+ if(!n||!p)return toast('Add your name and position','err');
+ if(!accept&&!reason)return toast('Explain why you are denying the review','err');
+ if(!signed('rrSig'))return toast('Please sign','err');
+ r.subResponse={accepted:accept,name:n,position:p,reason,date:iso(TODAY()),sig:$('rrSig').toDataURL('image/png')};
+ const log=d.reviewLog.slice().reverse().find(l=>l.rev===d.rev&&l.accepted===undefined);if(log){log.accepted=accept;log.respDate=iso(TODAY())}
+ d.comments.push({by:`${n} (${s.name})`,sdc:0,t:new Date().toISOString(),text:(accept?'Accepted SDC review':'DENIED SDC review')+(reason?': '+reason:'')});
+ let msg;
+ if(!accept){d.status='disputed';msg=`${s.name} DENIED the review of "${d.title}" Rev ${d.rev}: ${reason}`;notify('sdc',msg,`openDoc('${d.id}')`,'⚠️')}
+ else if(r.status==='A'){d.status='approved';d.nextDue=r.nextDue;d.reviewLog.push({rev:d.rev,status:'A',dateReceived:d.submitted,dateSent:r.date,reviewer:r.reviewer,position:r.position,date:iso(TODAY()),stage:'Status A achieved',accepted:true,respDate:iso(TODAY())});
+  msg=`${s.name} accepted Status A for "${d.title}" Rev ${d.rev} – RAMS now live (next review ${fmt(r.nextDue)})`;notify('sdc',msg,`openDoc('${d.id}')`,'✅');
+  const rs=S.invites.filter(i=>i.subId===d.subId&&inviteState(i)==='resign').length;if(rs)notify(d.subId,`${rs} operative(s) signed an older revision of "${d.title}" – re-send the induction pack`,"go('sinduct')",'🎬')}
+ else{d.status='actions';msg=`${s.name} accepted Status ${r.status} for "${d.title}" Rev ${d.rev} – revision to follow`;notify('sdc',msg,`openDoc('${d.id}')`,'📨')}
+ S.notes.filter(x=>x.to===d.subId&&x.act.includes(d.id)).forEach(x=>x.read=true);
+ audit(msg,n);save();closeModal();render();toast(accept?'Response sent to SDC':'Dispute sent to SDC');
+ if(accept&&r.status!=='A'&&confirm('Upload the revised RAMS now?'))openForm('ssow',d.id);
+}
+/* ---------- 6-weekly review ---------- */
+function periodicReview(id){
+ const d=S.docs.find(x=>x.id===id);
+ openModal(`<div class="mh"><h3>🔁 6-weekly System of Work review – ${esc(sub(d.subId).name)} – ${esc(d.title)}</h3><button class="btn ghost" onclick="closeModal()">✕</button></div><div class="mb">
+ <p class="mut small" style="margin-top:0">Confirms the SoW still reflects how the work is being done on site. If it doesn't, use "Request update" instead so the subcontractor resubmits.</p>
+ <div class="form"><label class="fld"><span>Name</span><input id="prN" value="${esc(U.name)}"></label><label class="fld"><span>Position</span><input id="prP" value="${esc(U.role)}"></label>
+ <label class="fld"><span>Date</span><input type="date" id="prD" value="${iso(TODAY())}"></label><label class="fld"><span>Next review</span><input type="date" id="prX" value="${addDays(iso(TODAY()),S.freq.ssow||42)}"></label>
+ <label class="fld full"><span>Notes (what was checked on site)</span><textarea id="prT" rows="3"></textarea></label></div>
+ <p class="small mut" style="margin:12px 0 6px">Signature</p><canvas id="prSig" class="sigpad"></canvas></div>
+ <div class="mf"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="savePeriodic('${d.id}')">Record review</button></div>`);
+ initSig('prSig');
+}
+function savePeriodic(id){const d=S.docs.find(x=>x.id===id);if(!signed('prSig'))return toast('Please sign','err');
+ d.periodic.push({name:$('prN').value,position:$('prP').value,date:$('prD').value,notes:$('prT').value,sig:$('prSig').toDataURL('image/png')});
+ d.reviewed=$('prD').value;d.reviewer=$('prN').value;d.nextDue=$('prX').value;
+ notify(d.subId,`SDC completed the 6-weekly review of "${d.title}" – next review ${fmt(d.nextDue)}`,`openDoc('${d.id}')`,'🔁');
+ audit(`6-weekly SoW review – ${sub(d.subId).name} – ${d.title}`);save();closeModal();render();toast('6-weekly review recorded')}
+/* ---------- printable form ---------- */
+function printReview(id){
+ const d=S.docs.find(x=>x.id===id),r=d.review;if(!r)return;
+ const yn=v=>`<td class="c">${v==='Y'?'✔':''}</td><td class="c">${v==='N'?'✔':''}</td><td class="c">${v==='NA'?'✔':''}</td>`;
+ const html=`<!DOCTYPE html><html><head><title>SoW Review ${esc(r.ref)}</title><style>body{font-family:Arial,sans-serif;font-size:11px;margin:20px;color:#000}table{width:100%;border-collapse:collapse;margin-bottom:8px}td,th{border:1px solid #555;padding:4px 6px;vertical-align:top}th{background:#d9e2f3}.sh td{background:#0C57A5;color:#fff;font-weight:bold}.c{text-align:center;width:34px}.red{color:#d00;font-weight:bold}h1{font-size:16px;margin:0}.hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}img.l{height:44px}</style></head><body>
+ <div class="hd"><div><h1>Contractor SoW Review &amp; Tracking Form</h1><b>Reference Number:</b> ${esc(r.ref)}</div><img class="l" src="${LOGO}"></div>
+ <table><tr><th>Project:</th><td colspan="3">${esc(r.project)}</td><th>Contractor:</th><td colspan="3">${esc(r.contractor)}</td></tr>
+ <tr><th>System of Work Title:</th><td>${esc(r.title)} (Rev ${esc(r.rev||d.rev)})</td><th>Category Classification:</th><td>A ${r.category==='A'?'✔':''} &nbsp; B ${r.category==='B'?'✔':''}</td><th>Date prepared:</th><td colspan="3">${fmt(r.datePrepared)}</td></tr>
+ <tr><th>Date Issued to SDC:</th><td>${fmt(r.dateIssued)}</td><th>Proposed Commencement Date:</th><td colspan="5">${fmt(r.commence)}</td></tr></table>
+ <table><tr><th>Item</th><th>Yes</th><th>No</th><th>N/A</th><th>Comments</th></tr>${RS.map((sec,si)=>`<tr class="sh"><td colspan="5">${esc(sec.s)}</td></tr>`+sec.i.map((t,ii)=>{const it=r.items[si+'_'+ii]||{};return `<tr><td>${esc(t)}</td>${yn(it.v)}<td>${esc(it.c||'')}</td></tr>`}).join('')).join('')}</table>
+ <table><tr><th style="width:60px">Status</th><th>Comment</th></tr>${['A','B','C'].map(c=>`<tr><td class="c"><b>${c}</b> ${r.status===c?'✔':''}</td><td><b>${esc(RS_STATUS[c])}</b></td></tr>`).join('')}<tr><td colspan="2" class="red">${esc(RS_NOTE)}</td></tr></table>
+ ${r.comments?`<table><tr><th>Site Manager comments</th></tr><tr><td>${esc(r.comments)}</td></tr></table>`:''}
+ <table><tr><th>Status</th><th>Date Received</th><th>Date Sent</th><th>Sub response</th></tr>${d.reviewLog.map(l=>`<tr><td>${esc(l.status)} – Rev ${esc(l.rev)}</td><td>${fmt(l.dateReceived)}</td><td>${fmt(l.dateSent)}</td><td>${l.accepted===true?'Accepted '+fmt(l.respDate):l.accepted===false?'Denied '+fmt(l.respDate):''}</td></tr>`).join('')}</table>
+ <table><tr><th>Review details</th><th>Name</th><th>Position</th><th>Signature</th><th>Date</th></tr>
+ <tr><td>Initial review</td><td>${esc((d.reviewLog[0]||{}).reviewer||r.reviewer)}</td><td>${esc((d.reviewLog[0]||{}).position||r.position)}</td><td>${r.sig?`<img src="${r.sig}" style="height:30px">`:''}</td><td>${fmt((d.reviewLog[0]||{}).date||r.date)}</td></tr>
+ ${(()=>{const a=d.reviewLog.find(l=>l.stage==='Status A achieved');return `<tr><td>Status A achieved</td><td>${esc(a?a.reviewer:'')}</td><td>${esc(a?a.position:'')}</td><td></td><td>${a?fmt(a.date):''}</td></tr>`})()}
+ <tr><td>First review</td><td>${esc((d.periodic[0]||{}).name||'')}</td><td>${esc((d.periodic[0]||{}).position||'')}</td><td>${d.periodic[0]&&d.periodic[0].sig?`<img src="${d.periodic[0].sig}" style="height:30px">`:''}</td><td>${fmt((d.periodic[0]||{}).date)}</td></tr></table>
+ <table><tr><th colspan="4">System of Work review dates (to be conducted at least every 6 weeks)</th></tr><tr><th>Name</th><th>Position</th><th>Signature</th><th>Date</th></tr>
+ ${[...d.periodic,...Array(Math.max(0,9-d.periodic.length)).fill({})].map(p=>`<tr><td>${esc(p.name||'')}&nbsp;</td><td>${esc(p.position||'')}</td><td>${p.sig?`<img src="${p.sig}" style="height:26px">`:''}</td><td>${fmt(p.date)==='—'?'':fmt(p.date)}</td></tr>`).join('')}</table>
+ <div style="text-align:right;font-size:10px">${RS_FORMREF}</div><script>window.onload=()=>setTimeout(()=>window.print(),300)<\/script></body></html>`;
+ const w=window.open('','_blank');if(!w)return toast('Allow pop-ups to print the form','err');w.document.write(html);w.document.close();
+}
+/* ---------- simple approvals (COSHH / insurance) ---------- */
+function decide(id,code){
+ const d=S.docs.find(x=>x.id===id),c=prompt(code==='A'?'Comment (optional)':'Comment to subcontractor (required)')||'';
+ if(code!=='A'&&!c.trim())return toast('Add a comment for Status '+code,'err');
+ const t=T(d.type);d.code=code;d.reviewer=U.name;d.reviewed=iso(TODAY());
+ if(code==='C'){d.status='rejected'}else{d.status='approved';d.nextDue=t.expiry?(d.data.expiry||d.nextDue):addDays(iso(TODAY()),S.freq[d.type]||t.freq||365)}
+ const label={A:'Approved',B:'Approved with comments',C:'Rejected – revise and resubmit'}[code];
+ d.comments.push({by:U.name,sdc:1,t:new Date().toISOString(),code,text:label+(c?': '+c:'')});
+ notify(d.subId,`SDC ${label.toLowerCase()}: "${d.title}"`,`openDoc('${d.id}')`,code==='C'?'⚠️':'✅');
+ audit(`Status ${code} – ${sub(d.subId).name} – ${d.title}`);save();closeModal();render();toast(`${label} – subcontractor notified`);
+}
+function ack(id){const d=S.docs.find(x=>x.id===id);d.status='acknowledged';d.reviewer=U.name;audit(`Acknowledged ${T(d.type).name} – ${sub(d.subId).name} – ${d.title}`);save();closeModal();render();toast('Acknowledged')}
+function requestUpdate(id){
+ const d=S.docs.find(x=>x.id===id),s=sub(d.subId);
+ const txt=`Please review and upload a current version of "${d.title}" (${T(d.type).name}). ${d.nextDue?'Review date: '+fmt(d.nextDue)+'.':''}`;
+ d.comments.push({by:U.name,sdc:1,t:new Date().toISOString(),text:'Update requested: '+txt});
+ notify(s.id,`SDC requested an update: "${d.title}"`,`openDoc('${d.id}')`,'✉️');
+ S.msgs.push({id:uid(),subId:s.id,from:U.name,fromSdc:true,date:new Date().toISOString(),text:txt});
+ audit(`Requested update – ${s.name} – ${d.title}`);save();closeModal();render();toast('Request sent to subcontractor');
+}
+function remind(subId){
+ const s=sub(subId),c=compliance(subId);
+ const docs=S.docs.filter(d=>d.subId===subId&&['overdue','due','rejected','defect','awaitsub'].includes(docStatus(d)));
+ const lines=docs.map(d=>`- ${d.title} (${T(d.type).name}) – ${d.status==='issued'?'SDC review waiting for your acceptance':['rejected','actions'].includes(d.status)?'revise and resubmit':dueText(d.nextDue)}`).concat(c.items.filter(i=>i.st==='missing').map(i=>`- ${i.label} – not yet provided`));
+ S.msgs.push({id:uid(),subId,from:U.name,fromSdc:true,date:new Date().toISOString(),text:'Reminder – the following need your attention:\n'+(lines.join('\n')||'- No outstanding items')});
+ notify(subId,`Reminder from SDC: ${lines.length} item(s) need your attention`,"go('sdash')",'⏰');
+ audit('Sent reminder to '+s.name);save();render();toast('Reminder sent to '+s.name);
+ if(s.email)mailto(s.email,`${S.project.name} (${S.project.number}) – documents outstanding`,`Hi ${s.contact||s.name},\n\nThe following need updating on the SDC Supply Chain Portal for ${S.project.name}:\n\n${lines.join('\n')||'- (none)'}\n\nThanks,\n${U.name}\nSDC`);
+}
+function remindAll(){
+ const ids=[...new Set(S.docs.filter(d=>isActive(d)&&['overdue','rejected','defect','awaitsub'].includes(docStatus(d))).map(d=>d.subId))];
+ ids.forEach(id=>{S.msgs.push({id:uid(),subId:id,from:U.name,fromSdc:true,date:new Date().toISOString(),text:'Reminder – you have overdue documents or SDC reviews waiting on the portal. Please check "My dashboard".'});notify(id,'Reminder from SDC: you have overdue documents / reviews to respond to',"go('sdash')",'⏰')});
+ audit(`Bulk reminder sent to ${ids.length} subcontractors`);save();render();toast(`Reminder sent to ${ids.length} subcontractors`);
+}
+
+/* =========================== PAPERWORK AIDE MEMOIR TRACKER =========================== */
+function aideInfo(a){
+ if(a.link){
+  const ds=S.docs.filter(d=>d.type===a.link&&isActive(d));
+  if(!ds.length)return {st:a.freqDays?'never':'asreq',last:'',next:'',n:0,by:'Sub-contractors (via portal)'};
+  const last=ds.map(d=>d.reviewed||d.submitted).filter(Boolean).sort().slice(-1)[0];
+  const next=ds.map(d=>d.nextDue).filter(Boolean).sort()[0];
+  return {st:worst(ds.map(docStatus)),last,next,n:ds.length,by:'Sub-contractors (via portal)'};
+ }
+ let st;
+ if(a.freqDays===1)st='daily';else if(!a.freqDays&&!a.nextDue)st='asreq';else if(!a.nextDue)st='never';else st=dueStatus(a.nextDue);
+ return {st,last:a.lastReviewed,next:a.nextDue,by:a.owner};
+}
+function aideStatus(a){return aideInfo(a).st}
+function vAide(){
+ const secs=[...new Set(S.aide.map(a=>a.sec))];
+ const c=k=>S.aide.filter(a=>aideStatus(a)===k).length;
+ return `<div class="tbl-wrap" style="margin-bottom:16px"><div class="xl-head">Paperwork Aide Memoir Review Tracker</div>
+ <div style="padding:12px 18px;display:flex;gap:30px;flex-wrap:wrap;font-size:13.5px"><div><b>Project Name:</b> ${esc(S.project.name)}</div><div><b>Project:</b> ${esc(S.project.number)}</div><div><b>Location:</b> ${esc(S.project.location)}</div><div><b>Date:</b> ${fmt(iso(TODAY()))}</div>
+ <div style="margin-left:auto">KEY: ${pill('overdue')} ${pill('due')} ${pill('indate')} ${pill('asreq')}</div></div></div>
+ <div class="kpis">${kpi(c('overdue')+c('never'),'Overdue / not yet recorded','red')}${kpi(c('due'),'Due ≤ 7 days','amber')}${kpi(c('indate'),'In date','green')}${kpi(c('daily')+c('asreq'),'Daily / as required','grey')}</div>
+ <div class="toolbar"><span class="mut small">Change a <b>Date Reviewed</b> directly in the table, or use <b>Record review</b> to add notes and keep a log. Rows marked 🔗 update from subcontractor inspections in the portal.</span><span class="sp"></span><button class="btn sm" onclick="addAide()">➕ Add item</button><button class="btn sm" onclick="exportAide()">⬇️ Export CSV</button><button class="btn sm" onclick="window.print()">🖨️ Print</button></div>
+ <div class="tbl-wrap"><table><tr><th>Document Title</th><th>Length of Time Between Review</th><th>Date Reviewed</th><th>Next Review Date</th><th>Reviewed by and owner</th><th>Current Status</th><th></th></tr>
+ ${secs.map(s=>`<tr class="sec"><td colspan="7">${esc(s)}</td></tr>`+S.aide.filter(a=>a.sec===s).map(a=>{const i=aideInfo(a);
+  if(a.link)return `<tr><td><b>${esc(a.title)}</b> <span class="tag" title="From subcontractor records">🔗 ${i.n} record${i.n==1?'':'s'}</span></td><td>${esc(a.freqLabel)}</td><td>${fmt(i.last)}</td><td>${fmt(i.next)}<div class="small mut">${i.next?dueText(i.next):''}</div></td><td class="small">${esc(i.by)}</td><td>${pill(i.st)}</td><td><button class="btn sm" onclick="F.type='${a.link}';F.st='';F.q='';F.site='active';go('docs')">View records</button></td></tr>`;
+  return `<tr><td><b>${esc(a.title)}</b>${a.notes?`<div class="small mut">${esc(a.notes)}</div>`:''}</td><td>${esc(a.freqLabel)}</td>
+  <td>${a.freqDays===1?'<span class="mut small">Daily</span>':`<input type="date" class="inl" value="${a.lastReviewed}" onchange="quickAide('${a.id}',this.value)">`}</td>
+  <td>${fmt(a.nextDue)}<div class="small mut">${a.nextDue?dueText(a.nextDue):''}</div></td><td><input class="inl" value="${esc(a.owner)}" placeholder="Name" onchange="S.aide.find(x=>x.id==='${a.id}').owner=this.value;save()"></td><td>${pill(i.st)}</td>
+  <td><button class="btn sm ${['overdue','never'].includes(i.st)?'pri':''}" onclick="reviewAide('${a.id}')">${a.freqDays===1?'Log today':'Record review'}</button></td></tr>`}).join('')).join('')}</table></div>`;
+}
+function quickAide(id,d){const a=S.aide.find(x=>x.id===id);a.lastReviewed=d;a.nextDue=d&&a.freqDays>1?addDays(d,a.freqDays):'';if(!a.owner)a.owner=U.name;a.log.push({d,by:a.owner,n:'Date updated in tracker'});audit('Aide Memoir – '+a.title+' reviewed '+fmt(d));save();render();toast(a.nextDue?'Next review '+fmt(a.nextDue):'Saved')}
+function reviewAide(id){
+ const a=S.aide.find(x=>x.id===id);
+ openModal(`<div class="mh"><h3>🗂️ ${esc(a.title)}</h3>${pill(aideStatus(a))}<button class="btn ghost" onclick="closeModal()">✕</button></div><div class="mb">
+ <p class="mut small" style="margin-top:0">${esc(a.sec)}</p>
+ <div class="form"><label class="fld"><span>Date reviewed</span><input type="date" id="arD" value="${iso(TODAY())}"></label>
+ <label class="fld"><span>Reviewed by and owner</span><input id="arB" value="${esc(a.owner||U.name)}"></label>
+ <label class="fld"><span>Days between reviews (0 = as required, 1 = daily)</span><input type="number" id="arF" value="${a.freqDays}"></label>
+ <label class="fld"><span>Length of time between review (label)</span><input id="arL" value="${esc(a.freqLabel)}"></label>
+ <label class="fld full"><span>Comments / changes made</span><textarea id="arN" rows="3">${esc(a.notes)}</textarea></label></div>
+ ${a.log.length?`<h4>Review log</h4><div class="tbl-wrap"><table><tr><th>Date</th><th>By</th><th>Notes</th></tr>${a.log.slice().reverse().map(l=>`<tr><td>${fmt(l.d)}</td><td>${esc(l.by)}</td><td>${esc(l.n)}</td></tr>`).join('')}</table></div>`:''}
+ </div><div class="mf"><button class="btn bad" style="margin-right:auto" onclick="if(confirm('Remove this item?')){S.aide=S.aide.filter(x=>x.id!=='${a.id}');save();closeModal();render()}">Remove</button><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="saveAide('${a.id}')">Save review</button></div>`);
+}
+function saveAide(id){const a=S.aide.find(x=>x.id===id),d=$('arD').value;a.freqDays=Number($('arF').value)||0;a.freqLabel=$('arL').value;a.owner=$('arB').value;a.notes=$('arN').value;a.lastReviewed=d;a.nextDue=a.freqDays>1?addDays(d,a.freqDays):'';a.log.push({d,by:a.owner,n:a.notes});audit('Aide Memoir reviewed – '+a.title);save();closeModal();render();toast('Review recorded'+(a.nextDue?' – next due '+fmt(a.nextDue):''))}
+function addAide(){const secs=[...new Set(S.aide.map(a=>a.sec))];
+ openModal(`<div class="mh"><h3>➕ Add Aide Memoir item</h3><button class="btn ghost" onclick="closeModal()">✕</button></div><div class="mb"><div class="form">
+ <label class="fld full"><span>Document title</span><input id="naT"></label><label class="fld full"><span>Section</span><select id="naS">${secs.map(s=>`<option>${esc(s)}</option>`).join('')}</select></label>
+ <label class="fld"><span>Length of time between review</span><input id="naL" value="Monthly"></label><label class="fld"><span>Days</span><input type="number" id="naF" value="30"></label></div></div>
+ <div class="mf"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="if(!$('naT').value)return;S.aide.push({id:uid(),sec:$('naS').value,title:$('naT').value,freqLabel:$('naL').value,freqDays:Number($('naF').value)||0,lastReviewed:'',nextDue:'',owner:'',notes:'',link:'',log:[]});save();closeModal();render()">Add</button></div>`)}
+function exportAide(){csvDownload(`Paperwork_Aide_Memoir_${S.project.number}_${iso(TODAY())}.csv`,[['Section','Document Title','Length of Time Between Review','Date Reviewed','Next Review Date','Reviewed by and owner','Current Status'],...S.aide.map(a=>{const i=aideInfo(a);return [a.sec,a.title,a.freqLabel,fmt(i.last),fmt(i.next),i.by,ST[i.st][0]]})])}
+
+/* =========================== PRE-SITE INDUCTIONS =========================== */
+function approvedVersion(d){
+ if(['approved','acknowledged'].includes(d.status))return {rev:d.rev,data:d.data,title:d.title};
+ const h=(d.history||[]).slice().reverse().find(x=>['approved','acknowledged'].includes(x.status));
+ return h?{rev:h.rev,data:h.data,title:d.title}:null;
+}
+function inviteState(i){
+ if(i.cancelled)return 'cancelled';
+ if(!i.completed)return 'pending';
+ if(S.induction.validDays&&daysTo(addDays(i.completed,S.induction.validDays))<0)return 'expired';
+ for(const r of i.rams||[]){const d=S.docs.find(x=>x.id===r.docId);const a=d&&approvedVersion(d);if(a&&a.rev!==r.rev)return 'resign'}
+ return 'complete';
+}
+function inviteLink(i){return location.href.split('#')[0]+'#induct='+i.token}
+function opInvite(o){return S.invites.filter(i=>i.opId===o.id&&!i.cancelled).sort((a,b)=>b.created.localeCompare(a.created))[0]}
+function opInvitePill(o){const i=opInvite(o);return i?pill(inviteState(i)):pill('none','Not sent')}
+function embedUrl(u){if(!u)return '';let m=u.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{6,})/);if(m)return 'https://www.youtube.com/embed/'+m[1];
+ m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/);if(m)return 'https://player.vimeo.com/video/'+m[1];if(/\/embed|\.mp4$/i.test(u))return u;return ''}
+function ramsSummary(a){
+ const d=a.data||{};
+ const rows=FORMS.ssow.filter(x=>!['declare','changes','category','prepared'].includes(x.k)&&d[x.k]!==undefined&&d[x.k]!==''&&!(Array.isArray(d[x.k])&&!d[x.k].length));
+ return rows.length?`<dl class="dl">${rows.map(x=>`<dt>${esc(x.l)}</dt><dd>${fieldVal(x,d[x.k])}</dd>`).join('')}</dl>`:'<p class="mut">Full RAMS document is held by your supervisor – ask them for a copy and confirm below once you have read it.</p>';
+}
+function openSendInduct(pre){
+ const ss=S.docs.filter(d=>d.subId===U.subId&&d.type==='ssow'&&isActive(d)&&approvedVersion(d));
+ const ops=S.ops.filter(o=>o.subId===U.subId);
+ const pend=S.docs.filter(d=>d.subId===U.subId&&d.type==='ssow'&&isActive(d)&&!approvedVersion(d));
+ openModal(`<div class="mh"><h3>🎬 Send pre-site induction pack</h3><button class="btn ghost" onclick="closeModal()">✕</button></div><div class="mb">
+ <p class="mut" style="margin-top:0">Each operative gets their own link. They watch the <b>${esc(S.induction.title)}</b> video, read your RAMS, then sign both on their phone before they arrive on site.</p>
+ ${!S.induction.videoUrl?`<div class="card" style="background:#fff7e0;border-color:#f1d27a;margin-bottom:12px">⚠️ SDC hasn't added the induction video link yet – operatives will see a placeholder until they do.</div>`:''}
+ <h4 style="margin:8px 0">1. RAMS to include (Status A only)</h4>
+ ${ss.length?ss.map(d=>{const a=approvedVersion(d);return `<label class="chk" style="margin-bottom:6px;border-radius:8px"><input type="checkbox" name="siR" value="${d.id}" ${!pre||pre.includes(d.id)?'checked':''}> ${esc(d.title)} <span class="tag">Rev ${esc(a.rev)} – Status A</span></label>`}).join(''):`<div class="card" style="background:#fde8e7;border-color:#f6c2bf">You don't have a RAMS at Status A yet. <a href="#" onclick="closeModal();openForm('ssow');return false">Submit your RAMS</a> – once SDC reviews it and you accept Status A you can send the pack.</div>`}
+ ${pend.length?`<p class="small mut">Not available until Status A: ${pend.map(d=>esc(d.title)).join(', ')}</p>`:''}
+ <h4 style="margin:16px 0 8px">2. Operatives</h4>
+ ${ops.length?`<div class="checks">${ops.map(o=>`<label class="chk"><input type="checkbox" name="siO" value="${o.id}"> ${esc(o.name)} ${opInvite(o)?'<span class="small mut">('+ST[inviteState(opInvite(o))][0]+')</span>':''}</label>`).join('')}</div>`:''}
+ <p class="small mut" style="margin:12px 0 6px">New operatives (one per line: <b>Name, email or mobile</b>)</p>
+ <textarea id="siNew" rows="3" style="width:100%;padding:9px;border:1px solid #cfd6df;border-radius:8px" placeholder="John Smith, john@email.com&#10;Dave Jones, 07700 900123"></textarea>
+ </div><div class="mf"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" ${ss.length?'':'disabled'} onclick="createInvites()">Create links</button></div>`,true);
+}
+function createInvites(){
+ const docIds=[...document.querySelectorAll('input[name=siR]:checked')].map(x=>x.value);
+ if(!docIds.length)return toast('Pick at least one RAMS','err');
+ const targets=[...document.querySelectorAll('input[name=siO]:checked')].map(x=>{const o=S.ops.find(y=>y.id===x.value);return {opId:o.id,opName:o.name,email:o.email||'',phone:o.phone||''}});
+ $('siNew').value.split('\n').map(l=>l.trim()).filter(Boolean).forEach(l=>{const [n,...r]=l.split(',');const c=r.join(',').trim();targets.push({opId:'',opName:n.trim(),email:c.includes('@')?c:'',phone:c&&!c.includes('@')?c:''})});
+ if(!targets.length)return toast('Pick or add at least one operative','err');
+ const made=targets.map(t=>{const i={id:uid(),token:uid()+uid(),subId:U.subId,...t,docIds,created:iso(TODAY()),sentBy:U.name,sent:[]};S.invites.push(i);return i});
+ audit(`Created ${made.length} pre-site induction link(s)`);save();render();showLinks(made.map(i=>i.id));
+}
+function inviteMsg(i){const s=sub(i.subId);return `Hi ${i.opName.split(' ')[0]},\n\nBefore you start on ${S.project.name} (${S.project.location}) for ${s.name}, please complete your pre-site induction:\n\n1. Watch the ${S.induction.title} video\n2. Read our RAMS for the job\n3. Sign up to both\n\nIt takes about ${S.induction.minutes} minutes on your phone:\n${inviteLink(i)}\n\nYou won't be allowed to start without it.\n\nThanks,\n${s.name}`}
+function sendVia(id,via){const i=S.invites.find(x=>x.id===id),m=inviteMsg(i);i.sent.push({via,t:iso(TODAY())});save();
+ if(via==='email')mailto(i.email,`${S.project.name} – pre-site induction & RAMS to sign`,m);
+ else if(via==='sms')location.href=`sms:${(i.phone||'').replace(/\s/g,'')}?&body=${encodeURIComponent(m)}`;
+ else if(via==='whatsapp')window.open(`https://wa.me/${(i.phone||'').replace(/\D/g,'').replace(/^0/,'44')}?text=${encodeURIComponent(m)}`,'_blank');
+ else{navigator.clipboard&&navigator.clipboard.writeText(m);toast('Message & link copied – paste into any app')}}
+function showLinks(ids){
+ openModal(`<div class="mh"><h3>✅ Induction links ready</h3><button class="btn ghost" onclick="closeModal()">✕</button></div><div class="mb">
+ <p class="mut" style="margin-top:0">Send each operative their own link. You'll see their progress under <b>Pre-site induction</b>.</p>
+ ${ids.map(id=>{const i=S.invites.find(x=>x.id===id);return `<div class="list-item"><div class="grow"><div class="t">${esc(i.opName)}</div><div class="s">${esc(i.email||i.phone||'No contact details')}</div></div>
+ <button class="btn sm" onclick="sendVia('${id}','email')">✉️ Email</button><button class="btn sm" onclick="sendVia('${id}','sms')">💬 Text</button><button class="btn sm" onclick="sendVia('${id}','whatsapp')">🟢 WhatsApp</button><button class="btn sm" onclick="sendVia('${id}','copy')">📋 Copy</button><a class="btn sm" href="${inviteLink(i)}" target="_blank">👁️ Preview</a></div>`}).join('')}
+ </div><div class="mf"><button class="btn pri" onclick="closeModal()">Done</button></div>`,true);
+}
+function inviteRow(i,isS){
+ const st=inviteState(i);
+ const ramsTxt=(i.completed?i.rams.map(r=>`${esc(r.title)} <span class="tag">Rev ${esc(r.rev)}</span>`):i.docIds.map(id=>{const d=S.docs.find(x=>x.id===id);return d?esc(d.title):''})).join('<br>');
+ const op=S.ops.find(o=>o.id===i.opId);
+ return `<tr><td><b>${esc(i.opName)}</b> ${i.sample?'<span class="tag sample">sample</span>':''}<div class="small mut">${esc(i.email||i.phone||'')}</div></td>${isS?`<td>${esc(sub(i.subId).name)}</td>`:''}<td class="small">${ramsTxt}</td><td>${fmt(i.created)}<div class="small mut">${i.sent.length?'sent '+i.sent.length+'×':'not sent yet'}</div></td>
+ <td style="text-align:center">${i.completed||(i.video&&i.video.watched)?'✅':'—'}</td><td style="text-align:center">${i.completed?'✅':'—'}</td><td>${fmt(i.completed)}</td><td>${pill(st)}</td>
+ ${isS?`<td>${op?`<label class="small"><input type="checkbox" ${op.inducted?'checked':''} ${i.completed?'':'disabled'} onchange="induct('${op.id}',this.checked)"> ${op.inducted?fmt(op.inductionDate):'Done on site'}</label>`:'—'}</td>`:''}
+ <td style="white-space:nowrap">${i.completed?`<button class="btn sm" onclick="viewRecord('${i.id}')">📄 Record</button>`:''}
+ ${!isS&&st==='pending'?`<button class="btn sm" onclick="showLinks(['${i.id}'])">🔁 Resend</button><button class="btn sm ghost" onclick="cancelInvite('${i.id}')">✕</button>`:''}
+ ${!isS&&['resign','expired'].includes(st)?`<button class="btn sm pri" onclick="reissue('${i.id}')">Re-send for signature</button>`:''}</td></tr>`;
+}
+function cancelInvite(id){if(!confirm('Cancel this link? It will stop working.'))return;S.invites.find(x=>x.id===id).cancelled=1;save();render()}
+function reissue(id){const o=S.invites.find(x=>x.id===id);const docIds=o.docIds.filter(d=>{const x=S.docs.find(y=>y.id===d);return x&&approvedVersion(x)});o.cancelled=1;
+ const i={id:uid(),token:uid()+uid(),subId:o.subId,opId:o.opId,opName:o.opName,email:o.email,phone:o.phone,docIds,created:iso(TODAY()),sentBy:U.name,sent:[]};S.invites.push(i);audit('Re-issued induction pack – '+o.opName);save();render();showLinks([i.id])}
+function viewRecord(id){
+ const i=S.invites.find(x=>x.id===id),d=i.details||{};
+ openModal(`<div class="mh"><h3>📄 Pre-site induction record – ${esc(i.opName)}</h3>${pill(inviteState(i))}<button class="btn ghost" onclick="closeModal()">✕</button></div><div class="mb">
+ <dl class="dl"><dt>Company</dt><dd>${esc(sub(i.subId).name)}</dd><dt>Project</dt><dd>${esc(S.project.name)} (${esc(S.project.number)})</dd>
+ <dt>Trade / role</dt><dd>${esc(d.role||'—')}</dd><dt>Mobile</dt><dd>${esc(d.phone||'—')}</dd><dt>Card</dt><dd>${esc(d.cscsType||'—')} ${esc(d.cscsNo||'')} ${d.cscsExpiry?'· expires '+fmt(d.cscsExpiry):''}</dd>
+ <dt>Emergency contact</dt><dd>${esc(d.emName||'—')} ${esc(d.emPhone||'')}</dd>
+ <dt>SDC induction video</dt><dd>✅ Watched ${fmt(i.video&&i.video.date||i.completed)} – ${esc(S.induction.title)}</dd>
+ <dt>RAMS signed</dt><dd>${i.rams.map(r=>`✅ ${esc(r.title)} – Rev ${esc(r.rev)}`).join('<br>')}</dd>
+ <dt>Site rules</dt><dd>✅ Accepted</dd><dt>Signed</dt><dd>${i.signedAt?new Date(i.signedAt).toLocaleString('en-GB'):fmt(i.completed)}</dd>
+ <dt>Signature</dt><dd>${i.sig?`<img src="${i.sig}" style="max-width:320px;border:1px solid var(--line);border-radius:8px;background:#fff">`:'<span class="mut">Sample record – no signature image</span>'}</dd></dl>
+ </div><div class="mf"><button class="btn" onclick="window.print()">🖨️ Print</button><button class="btn pri" onclick="closeModal()">Close</button></div>`,true);
+}
+function inviteTable(list,isS){
+ return `<div class="tbl-wrap"><table><tr><th>Operative</th>${isS?'<th>Company</th>':''}<th>RAMS</th><th>Link created</th><th>Video</th><th>RAMS read</th><th>Signed</th><th>Status</th>${isS?'<th>SDC site induction</th>':''}<th></th></tr>
+ ${list.map(i=>inviteRow(i,isS)).join('')||`<tr><td colspan="${isS?10:8}" class="empty">No induction packs sent yet</td></tr>`}</table></div>`;
+}
+function vSInduct(){
+ const list=S.invites.filter(i=>i.subId===U.subId&&!i.cancelled).sort((a,b)=>b.created.localeCompare(a.created));
+ const c=k=>list.filter(i=>inviteState(i)===k).length;
+ const v=embedUrl(S.induction.videoUrl);
+ return `<div class="banner"><div style="flex:1"><h2>Pre-site induction</h2><p>Send your operatives the SDC induction video and your Status A RAMS before they turn up. They sign both on their phone – no paperwork at the gate.</p>
+ <div class="flow"><div><b>1. Send link</b>Email, text or WhatsApp</div><div><b>2. Watch video</b>${esc(S.induction.title)}</div><div><b>3. Read RAMS</b>Your Status A RAMS</div><div><b>4. Sign up</b>Signature saved for SDC</div></div></div>
+ <button class="btn pri" onclick="openSendInduct()">🎬 Send induction pack</button></div>
+ <div class="kpis">${kpi(list.length,'Packs sent','navy')}${kpi(c('complete'),'Signed off','green')}${kpi(c('pending'),'Waiting for operative','amber')}${kpi(c('resign')+c('expired'),'Need re-signing','red')}</div>
+ ${c('resign')?`<div class="card" style="background:#fde8e7;border-color:#f6c2bf;margin-bottom:14px">⚠️ ${c('resign')} operative(s) signed an older RAMS revision. Use <b>Re-send for signature</b> so they sign the current version.</div>`:''}
+ ${inviteTable(list,false)}
+ <div class="card" style="margin-top:16px"><h3>🎥 SDC induction video</h3>${v?`<div style="max-width:560px"><div class="vid"><iframe src="${v}" allowfullscreen></iframe></div></div>`:S.induction.videoUrl?`<a class="btn" href="${esc(S.induction.videoUrl)}" target="_blank">▶ Open video</a>`:'<p class="mut">SDC will add the video link here.</p>'}</div>`;
+}
+function vInduct(){
+ const fs=F.isub||'',fst=F.ist||'';
+ const list=S.invites.filter(i=>!i.cancelled&&(!fs||i.subId===fs)&&(!fst||inviteState(i)===fst)).sort((a,b)=>b.created.localeCompare(a.created));
+ const all=S.invites.filter(i=>!i.cancelled),c=k=>all.filter(i=>inviteState(i)===k).length;
+ const onsiteNo=S.subs.filter(s=>s.site==='on site'&&!all.some(i=>i.subId===s.id));
+ return `<div class="kpis">${kpi(all.length,'Packs sent','navy')}${kpi(c('complete'),'Signed off','green')}${kpi(c('pending'),'Awaiting operative','amber')}${kpi(c('resign')+c('expired'),'Re-sign needed','red')}${kpi(S.ops.filter(o=>o.inducted).length,'Site inductions done','blue')}</div>
+ <div class="grid g2" style="margin-bottom:16px"><div class="card"><h3>🎥 Induction video & site rules (SDC)</h3><div class="form">
+  <label class="fld"><span>Induction title</span><input id="inT" value="${esc(S.induction.title)}"></label><label class="fld"><span>Approx. minutes</span><input type="number" id="inM" value="${S.induction.minutes}"></label>
+  <label class="fld full"><span>Video link (YouTube, Vimeo, Stream/SharePoint link)</span><input id="inV" value="${esc(S.induction.videoUrl)}" placeholder="https://..."></label>
+  <label class="fld"><span>Valid for (days, 0 = no expiry)</span><input type="number" id="inD" value="${S.induction.validDays}"></label><div></div>
+  <label class="fld full"><span>Site rules operatives must accept (one per line)</span><textarea id="inR" rows="5">${esc(S.induction.rules)}</textarea></label></div><br><button class="btn pri" onclick="saveInductSettings()">Save</button></div>
+ <div class="card"><h3>⚠️ On site with no induction packs sent</h3>${onsiteNo.map(s=>`<div class="list-item"><div class="grow t">${esc(s.name)}</div><button class="btn sm" onclick="chaseInduct('${s.id}')">✉️ Chase</button></div>`).join('')||'<div class="empty">Every on-site subcontractor has sent packs.</div>'}</div></div>
+ <div class="toolbar"><select onchange="F.isub=this.value;render()"><option value="">All subcontractors</option>${S.subs.map(s=>`<option value="${s.id}" ${fs===s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</select>
+ <select onchange="F.ist=this.value;render()"><option value="">All statuses</option>${['pending','complete','resign','expired'].map(s=>`<option value="${s}" ${fst===s?'selected':''}>${ST[s][0]}</option>`).join('')}</select><span class="sp"></span><button class="btn sm" onclick="exportInduct()">⬇️ Export CSV</button></div>
+ ${inviteTable(list,true)}`;
+}
+function saveInductSettings(){Object.assign(S.induction,{title:$('inT').value,minutes:Number($('inM').value)||20,videoUrl:$('inV').value.trim(),validDays:Number($('inD').value)||0,rules:$('inR').value});audit('Updated induction video / site rules');save();render();toast('Induction settings saved')}
+function chaseInduct(id){const s=sub(id);notify(id,'SDC: please send the pre-site induction pack to all your operatives',"go('sinduct')",'🎬');S.msgs.push({id:uid(),subId:id,from:U.name,fromSdc:true,date:new Date().toISOString(),text:'Please send the SDC pre-site induction pack (video + your RAMS) to all your operatives from the "Pre-site induction" tab before they come to site.'});audit('Chased induction packs – '+s.name);save();render();toast('Reminder sent to '+s.name)}
+function exportInduct(){csvDownload(`Pre-site_inductions_${iso(TODAY())}.csv`,[['Operative','Company','RAMS (rev)','Link created','Signed','Status','SDC site induction'],...S.invites.filter(i=>!i.cancelled).map(i=>{const o=S.ops.find(x=>x.id===i.opId);return [i.opName,sub(i.subId).name,(i.rams||[]).map(r=>r.title+' Rev '+r.rev).join('; '),fmt(i.created),fmt(i.completed),ST[inviteState(i)][0],o&&o.inducted?fmt(o.inductionDate):'']})])}
+
+/* ---- operative-facing page ---- */
+let OP={};
+function renderOperative(token){
+ closeModal();
+ const i=S.invites.find(x=>x.token===token);
+ const head=`<div class="op-top"><span class="lg"><img src="${LOGO}" alt="SDC"></span><div><b>Pre-site induction</b><br><small>${esc(S.project.name)} · ${esc(S.project.location)}</small></div></div>`;
+ if(!i||i.cancelled){$('app').innerHTML=head+`<div class="op-wrap"><div class="op-step"><h2>Link not valid</h2><p>This link has been cancelled or replaced. Ask your supervisor for a new one.</p><p class="small mut">Prototype note: links only open in the same browser the portal is stored in.</p></div></div>`;return}
+ const s=sub(i.subId);
+ if(i.completed&&inviteState(i)==='complete'){$('app').innerHTML=head+`<div class="op-wrap"><div class="op-step" style="text-align:center"><div class="big-ok">✅</div><h2 style="justify-content:center">You're all signed up, ${esc(i.opName.split(' ')[0])}</h2><p>Completed ${fmt(i.completed)}. Bring your CSCS card on your first day – SDC will finish your induction at the gate.</p></div></div>`;return}
+ const rams=i.docIds.map(id=>S.docs.find(d=>d.id===id)).filter(Boolean).map(d=>({d,a:approvedVersion(d)})).filter(x=>x.a);
+ const op=S.ops.find(o=>o.id===i.opId)||{};
+ const v=embedUrl(S.induction.videoUrl);
+ OP={id:i.id,video:false,rams:{}};
+ $('app').innerHTML=head+`<div class="op-wrap">
+ <div class="op-step" style="background:linear-gradient(135deg,#0C57A5,#063a73);color:#fff;border:0"><h2>Hi ${esc(i.opName.split(' ')[0])} 👋</h2><p style="margin:0;opacity:.9">${esc(s.name)} has asked you to complete this before starting on site. It takes about ${S.induction.minutes} minutes. Do all 4 steps and sign at the bottom.</p></div>
+ <div class="op-step" id="st1"><h2><span class="op-num">1</span>Your details</h2><div class="form">
+  <label class="fld"><span>Full name *</span><input id="oxN" value="${esc(i.opName)}"></label><label class="fld"><span>Trade / role</span><input id="oxR" value="${esc(op.role||'')}"></label>
+  <label class="fld"><span>Mobile</span><input id="oxP" type="tel" value="${esc(i.phone||'')}"></label>
+  <label class="fld"><span>Card type *</span><select id="oxT">${CARDS.map(x=>`<option ${op.cscsType===x?'selected':''}>${x}</option>`).join('')}</select></label>
+  <label class="fld"><span>Card number</span><input id="oxNo" value="${esc(op.cscsNo||'')}"></label><label class="fld"><span>Card expiry *</span><input type="date" id="oxE" value="${esc(op.cscsExpiry||'')}"></label>
+  <label class="fld"><span>Emergency contact name</span><input id="oxEN"></label><label class="fld"><span>Emergency contact number</span><input id="oxEP" type="tel"></label></div></div>
+ <div class="op-step" id="st2"><h2><span class="op-num">2</span>Watch the ${esc(S.induction.title)}</h2>
+  ${v?`<div class="vid"><iframe src="${v}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`:S.induction.videoUrl?`<p><a class="btn pri" href="${esc(S.induction.videoUrl)}" target="_blank" onclick="$('oxV').disabled=false">▶ Open induction video</a></p>`:`<div class="vid"><div style="position:absolute;inset:0;display:grid;place-items:center;color:#fff">🎬 SDC induction video link to be added</div></div>`}
+  <label class="fld declare"><input type="checkbox" id="oxV" ${S.induction.videoUrl&&!v?'disabled':''} onchange="OP.video=this.checked;opDone()"><span style="font-weight:400">I have watched the full SDC induction video and understand it.</span></label></div>
+ <div class="op-step" id="st3"><h2><span class="op-num">3</span>Read ${esc(s.name)}'s RAMS</h2>
+  ${rams.map(({d,a})=>`<div class="rams-box"><h4>📋 ${esc(a.title)} <span class="tag">Rev ${esc(a.rev)}</span></h4>${ramsSummary(a)}
+  <label class="fld declare" style="margin-top:10px"><input type="checkbox" onchange="OP.rams['${d.id}']=this.checked;opDone()"><span style="font-weight:400">I have read and understood <b>${esc(a.title)} Rev ${esc(a.rev)}</b> and will work to it. I'll stop and ask my supervisor if anything changes.</span></label></div>`).join('')||'<p class="mut">No RAMS attached – ask your supervisor.</p>'}</div>
+ <div class="op-step" id="st4"><h2><span class="op-num">4</span>Site rules & sign</h2>
+  <ul class="rules">${S.induction.rules.split('\n').filter(Boolean).map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
+  <label class="fld declare" style="margin-bottom:12px"><input type="checkbox" id="oxRules"><span style="font-weight:400">I agree to follow the SDC site rules.</span></label>
+  <p class="small mut" style="margin:0 0 6px">Sign with your finger or mouse</p><canvas id="sig" class="sigpad"></canvas>
+  <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" onclick="clearSig('sig')">Clear</button><span style="flex:1"></span><button class="btn pri" id="oxGo" onclick="opSubmit()">Sign & submit</button></div></div>
+ </div>`;
+ initSig('sig');
+}
+function opDone(){$('st2').classList.toggle('done',OP.video);const i=S.invites.find(x=>x.id===OP.id);$('st3').classList.toggle('done',i.docIds.every(d=>OP.rams[d]))}
+function opSubmit(){
+ const i=S.invites.find(x=>x.id===OP.id);
+ const name=$('oxN').value.trim(),ct=$('oxT').value,ce=$('oxE').value;
+ if(!name||!ct||!ce)return toast('Fill in your name, card type and expiry (step 1)','err');
+ if(!OP.video)return toast('Tick that you have watched the video (step 2)','err');
+ if(!i.docIds.every(d=>OP.rams[d]))return toast('Tick each RAMS once read (step 3)','err');
+ if(!$('oxRules').checked)return toast('Agree to the site rules (step 4)','err');
+ if(!signed('sig'))return toast('Please sign in the box','err');
+ const det={role:$('oxR').value,phone:$('oxP').value,cscsType:ct,cscsNo:$('oxNo').value,cscsExpiry:ce,emName:$('oxEN').value,emPhone:$('oxEP').value};
+ i.opName=name;i.details=det;i.video={watched:true,date:iso(TODAY())};
+ i.rams=i.docIds.map(id=>{const d=S.docs.find(x=>x.id===id);const a=approvedVersion(d);return {docId:id,rev:a.rev,title:a.title}});
+ i.sig=$('sig').toDataURL('image/png');i.completed=iso(TODAY());i.signedAt=new Date().toISOString();
+ let o=S.ops.find(x=>x.id===i.opId);
+ if(!o){o={id:uid(),subId:i.subId,inducted:false,inductionDate:'',certs:''};S.ops.push(o);i.opId=o.id}
+ Object.assign(o,{name,role:det.role||o.role||'',cscsType:ct,cscsNo:det.cscsNo,cscsExpiry:ce,phone:det.phone,sample:0});
+ S.msgs.push({id:uid(),subId:i.subId,from:name,fromSdc:false,date:new Date().toISOString(),text:`✅ ${name} completed the pre-site induction – watched the SDC video and signed ${i.rams.map(r=>r.title+' Rev '+r.rev).join(', ')}.`});
+ notify(i.subId,`${name} completed the pre-site induction`,"go('sinduct')",'✅');notify('sdc',`${name} (${sub(i.subId).name}) completed the pre-site induction – ready for gate induction`,"go('induct')",'🎬');
+ audit(`Pre-site induction signed – ${name} (${sub(i.subId).name})`,name);save();renderOperative(i.token);window.scrollTo(0,0);
+}
+const CARDS=['','Green – Labourer','Blue – Skilled worker','Gold – Supervisor','Black – Manager','Red – Trainee/Provisional','ECS Gold','ECS Blue','JIB/PMES','CPCS','NPORS','Other'];
+
+/* ---------- calendar ---------- */
+function calEvents(){
+ const ev=[];
+ S.docs.filter(d=>isActive(d)&&d.nextDue).forEach(d=>ev.push({d:d.nextDue,t:sub(d.subId).name+' – '+d.title,st:docStatus(d),on:`openDoc('${d.id}')`,sid:d.subId}));
+ S.docs.filter(d=>d.type==='ssow'&&isActive(d)&&d.data&&d.data.start&&!approvedVersion(d)).forEach(d=>ev.push({d:d.data.start,t:'START (no Status A) – '+sub(d.subId).name+' – '+d.title,st:'overdue',on:`openDoc('${d.id}')`,sid:d.subId}));
+ if(U.kind==='sdc')S.aide.filter(a=>!a.link&&a.nextDue).forEach(a=>ev.push({d:a.nextDue,t:'SDC – '+a.title,st:aideStatus(a),on:`reviewAide('${a.id}')`}));
+ S.ops.filter(o=>o.cscsExpiry&&!['completed','notonsite'].includes(opStatus(o))).forEach(o=>ev.push({d:o.cscsExpiry,t:'CSCS expiry – '+o.name,st:opStatus(o),on:`editOp('${o.id}')`,sid:o.subId}));
+ return U.kind==='sub'?ev.filter(e=>e.sid===U.subId):ev;
+}
+function vCal(){
+ const ev=calEvents(),y=calRef.getFullYear(),m=calRef.getMonth();
+ const first=new Date(y,m,1),start=new Date(first);start.setDate(1-((first.getDay()+6)%7));
+ let cells='';for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);const k=iso(d);const es=ev.filter(e=>e.d===k);
+  cells+=`<div class="d ${d.getMonth()!==m?'o':''} ${k===iso(TODAY())?'t':''}"><div class="dn">${d.getDate()}</div>${es.slice(0,4).map(e=>{const c=(ST[e.st]||['','grey'])[1];return `<span class="ev p-${c}" onclick="${e.on}" title="${esc(e.t)}">${esc(e.t)}</span>`}).join('')}${es.length>4?`<span class="small mut">+${es.length-4} more</span>`:''}</div>`}
+ return `<div class="toolbar"><button class="btn" onclick="calRef.setMonth(calRef.getMonth()-1);render()">‹</button><h3 style="margin:0;min-width:170px;text-align:center">${first.toLocaleDateString('en-GB',{month:'long',year:'numeric'})}</h3><button class="btn" onclick="calRef.setMonth(calRef.getMonth()+1);render()">›</button><button class="btn sm" onclick="calRef=TODAY();calRef.setDate(1);render()">Today</button><span class="sp"></span><span class="small mut">Review dates, proposed starts without Status A, Aide Memoir items, insurance and CSCS expiries</span></div>
+ <div class="cal">${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="dh">${d}</div>`).join('')}${cells}</div>`;
+}
+
+/* ---------- subcontractors ---------- */
+function vSubs(){
+ return `<div class="toolbar"><input placeholder="🔍 Search" oninput="F.sq=this.value;$('subT').innerHTML=subsRows()" value="${esc(F.sq||'')}"><span class="sp"></span><button class="btn pri" onclick="editSub()">➕ Add subcontractor</button></div>
+ <div class="tbl-wrap"><table><thead><tr><th>Company</th><th>Trade</th><th>Contact</th><th>Site status</th><th>Docs</th><th>Overdue</th><th>Inductions signed</th><th>Paperwork</th><th></th></tr></thead><tbody id="subT">${subsRows()}</tbody></table></div>`;
+}
+function subsRows(){return S.subs.filter(s=>!F.sq||s.name.toLowerCase().includes(F.sq.toLowerCase())).sort((a,b)=>a.name.localeCompare(b.name)).map(s=>{const ds=S.docs.filter(d=>d.subId===s.id),o=ds.filter(d=>['overdue','rejected','defect'].includes(docStatus(d))).length,c=compliance(s.id);
+ const inv=S.invites.filter(i=>i.subId===s.id&&!i.cancelled);
+ return `<tr class="click" onclick="openSub('${s.id}')"><td><b>${esc(s.name)}</b></td><td>${esc(s.trade)}</td><td>${esc(s.contact||'')}<div class="small mut">${esc(s.email||'')}</div></td>
+ <td onclick="event.stopPropagation()"><select onchange="setSite('${s.id}',this.value)" style="padding:4px;border-radius:6px;border:1px solid var(--line)">${['on site','not on site','completed'].map(x=>`<option ${s.site===x?'selected':''}>${x}</option>`).join('')}</select></td>
+ <td>${ds.length}</td><td>${o?`<span class="pill p-red">${o}</span>`:'0'}</td><td>${inv.filter(i=>inviteState(i)==='complete').length} / ${inv.length}</td><td>${c.score}%</td><td onclick="event.stopPropagation()"><button class="btn sm" onclick="remind('${s.id}')">✉️ Remind</button> <button class="btn sm" onclick="editSub('${s.id}')">Edit</button></td></tr>`}).join('')}
+function setSite(id,v){const s=sub(id);s.site=v;audit(`${s.name} site status → ${v}`);save();toast(s.name+' marked '+v)}
+function editSub(id){
+ const s=id?sub(id):{name:'',trade:'',contact:'',email:'',phone:'',site:'on site',pin:String(Math.floor(1000+Math.random()*9000))};
+ openModal(`<div class="mh"><h3>${id?'Edit':'Add'} subcontractor</h3><button class="btn ghost" onclick="closeModal()">✕</button></div><div class="mb"><div class="form">
+ <label class="fld"><span>Company name *</span><input id="sN" value="${esc(s.name)}"></label><label class="fld"><span>Trade / package</span><input id="sT" value="${esc(s.trade)}"></label>
+ <label class="fld"><span>Contact name</span><input id="sC" value="${esc(s.contact)}"></label><label class="fld"><span>Email</span><input type="email" id="sE" value="${esc(s.email)}"></label>
+ <label class="fld"><span>Phone</span><input id="sP" value="${esc(s.phone)}"></label><label class="fld"><span>Portal PIN</span><input id="sK" value="${esc(s.pin)}"></label>
+ <label class="fld"><span>Site status</span><select id="sS">${['on site','not on site','completed'].map(x=>`<option ${s.site===x?'selected':''}>${x}</option>`).join('')}</select></label></div></div>
+ <div class="mf">${id?`<button class="btn bad" style="margin-right:auto" onclick="delSub('${id}')">Delete</button>`:''}<button class="btn" onclick="closeModal()">Cancel</button>${!id?'<button class="btn" onclick="saveSub(\'\',1)">Save & email invite</button>':''}<button class="btn pri" onclick="saveSub('${id||''}')">Save</button></div>`);
+}
+function saveSub(id,invite){
+ const n=$('sN').value.trim();if(!n)return toast('Company name required','err');
+ let s=id?sub(id):{id:uid()};
+ Object.assign(s,{name:n,trade:$('sT').value,contact:$('sC').value,email:$('sE').value,phone:$('sP').value,pin:$('sK').value||'1234',site:$('sS').value});
+ if(!id)S.subs.push(s);audit((id?'Updated':'Added')+' subcontractor '+n);save();closeModal();render();toast('Saved');
+ if(invite)mailto(s.email,`${S.project.name} – SDC Supply Chain Portal access`,`Hi ${s.contact||''},\n\nYou've been set up on the SDC Supply Chain Portal for ${S.project.name} (${S.project.number}).\n\nCompany: ${s.name}\nPIN: ${s.pin}\n\nBefore starting on site please upload your RAMS at least 2 weeks before your start date. SDC reviews it on the SoW Review & Tracking Form – you'll get a notification to accept or deny the review. Also upload EL/PL insurance and operative details.\n\nOnce your RAMS is at Status A, send the pre-site induction pack (SDC video + your RAMS) to every operative from the portal.\n\nThanks,\n${U.name}\nSDC`);
+}
+function delSub(id){if(!confirm('Delete this subcontractor and all their documents?'))return;const s=sub(id);S.subs=S.subs.filter(x=>x.id!==id);S.docs=S.docs.filter(d=>d.subId!==id);S.ops=S.ops.filter(o=>o.subId!==id);S.invites=S.invites.filter(i=>i.subId!==id);audit('Deleted subcontractor '+s.name);save();closeModal();render()}
+function openSub(id){
+ const s=sub(id),c=compliance(id),ds=S.docs.filter(d=>d.subId===id),ops=S.ops.filter(o=>o.subId===id);
+ const col=c.score>=75?'green':c.score>=50?'amber':'red';
+ openModal(`<div class="mh"><h3>🏗️ ${esc(s.name)} <span class="small mut">${esc(s.trade)}</span></h3>${pill(s.site==='on site'?'indate':s.site==='completed'?'completed':'notonsite',s.site)}<button class="btn ghost" onclick="closeModal()">✕</button></div>
+ <div class="mb"><div class="grid g3" style="grid-template-columns:160px 1fr 1fr;align-items:center">
+  <div class="ring" style="background:conic-gradient(var(--${col}) ${c.score*3.6}deg,#edf0f4 0)"><div><span><b>${c.score}%</b><span class="small mut">in date</span></span></div></div>
+  <div>${c.items.map(i=>`<div class="list-item"><div class="grow">${esc(i.label)}</div>${pill(i.st)}</div>`).join('')}</div>
+  <dl class="dl" style="grid-template-columns:90px 1fr"><dt>Contact</dt><dd>${esc(s.contact||'—')}</dd><dt>Email</dt><dd>${esc(s.email||'—')}</dd><dt>Phone</dt><dd>${esc(s.phone||'—')}</dd><dt>PIN</dt><dd>${esc(s.pin)}</dd></dl></div>
+  <h4 style="margin:18px 0 6px">Documents (${ds.length})</h4>${ds.map(d=>docRow(d,{hideSub:1})).join('')||'<div class="empty">No documents yet</div>'}
+  <h4 style="margin:18px 0 6px">Operatives (${ops.length})</h4>${ops.map(o=>`<div class="list-item"><div class="grow"><div class="t">${esc(o.name)} <span class="small mut">${esc(o.role)}</span></div><div class="s">${esc(o.cscsType)} · expires ${fmt(o.cscsExpiry)} ${o.inducted?'· ✅ SDC inducted':'· ⏳ not inducted'}</div></div>${opInvitePill(o)} ${pill(opStatus(o))}</div>`).join('')||'<div class="empty">No operatives registered</div>'}
+ </div><div class="mf"><button class="btn" onclick="editSub('${id}')">Edit</button><button class="btn" onclick="closeModal();threadSub='${id}';go('msgs')">💬 Message</button><button class="btn pri" onclick="remind('${id}')">✉️ Send reminder</button></div>`,true);
+}
+
+/* ---------- operatives (SDC) ---------- */
+function vOps(){
+ const ops=S.ops.slice().sort((a,b)=>RANK.indexOf(opStatus(a))-RANK.indexOf(opStatus(b)));
+ return `<p class="mut">All operatives registered by subcontractors or via pre-site induction links. Tick <b>Inducted</b> once the SDC site induction is done at the gate.</p>
+ <div class="tbl-wrap"><table><tr><th>Name</th><th>Company</th><th>Role</th><th>Card</th><th>Expiry</th><th>Other tickets</th><th>Pre-site (video + RAMS)</th><th>SDC inducted</th><th>Card status</th></tr>
+ ${ops.map(o=>`<tr><td><b>${esc(o.name)}</b> ${o.sample?'<span class="tag sample">sample</span>':''}</td><td>${esc(sub(o.subId).name)}</td><td>${esc(o.role)}</td><td>${esc(o.cscsType)} <span class="small mut">${esc(o.cscsNo)}</span></td><td>${fmt(o.cscsExpiry)}</td><td>${esc(o.certs)}</td><td>${opInvitePill(o)}</td>
+ <td><label><input type="checkbox" ${o.inducted?'checked':''} onchange="induct('${o.id}',this.checked)"> ${o.inductionDate?fmt(o.inductionDate):''}</label></td><td>${pill(opStatus(o))}</td></tr>`).join('')||'<tr><td colspan="9" class="empty">No operatives yet</td></tr>'}</table></div>`;
+}
+function induct(id,v){const o=S.ops.find(x=>x.id===id);const i=opInvite(o);if(v&&(!i||inviteState(i)!=='complete')&&!confirm(o.name+" hasn't completed the pre-site video & RAMS sign-off. Mark as inducted anyway?")){render();return}
+ o.inducted=v;o.inductionDate=v?iso(TODAY()):'';audit(`${v?'Inducted':'Removed induction'} – ${o.name}`);save();render()}
+
+/* ---------- messages ---------- */
+let threadSub=null;
+function vMsgs(){
+ const ids=[...new Set(S.msgs.map(m=>m.subId))].filter(sub);
+ const latest=id=>S.msgs.filter(m=>m.subId===id).slice(-1)[0];
+ if(threadSub&&!ids.includes(threadSub))ids.unshift(threadSub);
+ ids.sort((a,b)=>((latest(b)||{}).date||'z').localeCompare((latest(a)||{}).date||'z'));
+ if(threadSub)S.msgs.filter(m=>m.subId===threadSub&&!m.fromSdc).forEach(m=>m.readSdc=1);
+ return `<div class="grid" style="grid-template-columns:300px 1fr"><div class="card" style="padding:8px"><select onchange="if(this.value)openThread(this.value)" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--line);margin-bottom:6px"><option value="">+ New conversation…</option>${S.subs.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select>
+ ${ids.map(id=>{const m=latest(id),un=S.msgs.some(x=>x.subId===id&&!x.fromSdc&&!x.readSdc);return `<div class="list-item" style="cursor:pointer;padding:9px;${threadSub===id?'background:#e6f0fb;border-radius:8px':''}" onclick="openThread('${id}')"><div class="grow"><div class="t">${un?'🔵 ':''}${esc(sub(id).name)}</div><div class="s" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(m?m.text:'')}</div></div></div>`}).join('')}</div>
+ <div class="card" id="thread">${threadSub?threadHTML(threadSub,true):'<div class="empty">Pick a conversation</div>'}</div></div>`;
+}
+function threadHTML(id,isS){
+ const ms=S.msgs.filter(m=>m.subId===id);
+ return `<h3>💬 ${esc(sub(id).name)}</h3><div class="thread" style="max-height:52vh;overflow:auto;margin-bottom:12px">${ms.map(m=>`<div class="msg ${m.fromSdc===isS?'me':''}"><div class="who">${esc(m.from)} · ${new Date(m.date).toLocaleString('en-GB')}</div>${esc(m.text).replace(/\n/g,'<br>')}</div>`).join('')||'<div class="empty">No messages yet</div>'}</div>
+ <div style="display:flex;gap:8px"><textarea id="msgT" rows="2" style="flex:1;padding:9px;border:1px solid var(--line);border-radius:8px" placeholder="Write a message…"></textarea><button class="btn pri" onclick="sendMsg('${id}',${isS})">Send</button></div>`;
+}
+function openThread(id){threadSub=id;save();render()}
+function sendMsg(id,isS){const t=$('msgT').value.trim();if(!t)return;S.msgs.push({id:uid(),subId:id,from:U.name,fromSdc:isS,date:new Date().toISOString(),text:t});notify(isS?id:'sdc',`New message from ${isS?'SDC':sub(id).name}`,isS?"go('smsgs')":`threadSub='${id}';go('msgs')`,'💬');audit('Message – '+sub(id).name);save();render()}
+
+/* ---------- log & settings ---------- */
+function vLog(){return `<div class="tbl-wrap"><table><tr><th>When</th><th>Who</th><th>Action</th></tr>${S.audit.map(a=>`<tr><td class="small">${new Date(a.t).toLocaleString('en-GB')}</td><td>${esc(a.who)}</td><td>${esc(a.action)}</td></tr>`).join('')}</table></div>`}
+function vSettings(){
+ return `<div class="grid g2"><div class="card"><h3>🏗️ Project</h3><div class="form" style="grid-template-columns:1fr">
+  <label class="fld"><span>Project name</span><input id="pN" value="${esc(S.project.name)}"></label><label class="fld"><span>Project number</span><input id="pNo" value="${esc(S.project.number)}"></label>
+  <label class="fld"><span>Location</span><input id="pL" value="${esc(S.project.location)}"></label>
+  <label class="fld"><span>SDC review team email (subcontractors are prompted to email this when they upload RAMS)</span><input id="pE" value="${esc(S.project.sdcEmail||'')}" placeholder="e.g. site.team@..."></label><button class="btn pri" onclick="saveProj()">Save project</button></div></div>
+ <div class="card"><h3>⏱️ Review intervals (days)</h3><div class="form">${Object.keys(S.freq).map(k=>`<label class="fld"><span>${esc(T(k).name)}</span><input type="number" id="fq_${k}" value="${S.freq[k]}"></label>`).join('')}</div><br><button class="btn pri" onclick="saveFreq()">Save intervals</button></div>
+ <div class="card"><h3>👥 SDC team logins</h3>${S.staff.map((s,i)=>`<div class="list-item"><div class="grow"><b>${esc(s.name)}</b> <span class="mut small">${esc(s.role)}</span></div><button class="btn sm" onclick="S.staff.splice(${i},1);save();render()">Remove</button></div>`).join('')}<br><button class="btn" onclick="addStaff()">➕ Add team member</button></div>
+ <div class="card"><h3>💾 Data</h3><p class="mut small">This prototype stores everything in this browser. Export a backup to move it or share with the team.</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="backup()">⬇️ Export backup (JSON)</button><label class="btn">⬆️ Import backup<input type="file" accept=".json" hidden onchange="restore(this)"></label><button class="btn" onclick="exportSsow()">⬇️ SSoW tracker CSV</button><button class="btn" onclick="exportAide()">⬇️ Aide Memoir CSV</button><button class="btn" onclick="exportInduct()">⬇️ Inductions CSV</button><button class="btn bad" onclick="if(confirm('Reset all data back to the imported trackers?')){S=migrate(seed());S.sheetV=1;save();render()}">Reset to tracker data</button></div></div></div>`;
+}
+function saveProj(){S.project.name=$('pN').value;S.project.number=$('pNo').value;S.project.location=$('pL').value;S.project.sdcEmail=$('pE').value.trim();audit('Updated project details');save();render();toast('Saved')}
+function saveFreq(){Object.keys(S.freq).forEach(k=>S.freq[k]=Number($('fq_'+k).value)||S.freq[k]);audit('Updated review intervals');save();toast('Intervals saved')}
+function addStaff(){const n=prompt('Name?');if(!n)return;S.staff.push({name:n,role:prompt('Role?','Site Manager')||''});save();render()}
+function backup(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:'application/json'}));a.download=`SDC_portal_backup_${iso(TODAY())}.json`;a.click()}
+function restore(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(x.v!==1)throw 0;S=migrate(x);S.sheetV=1;save();render();toast('Backup imported')}catch(e){toast('Not a valid backup file','err')}};r.readAsText(f)}
+
+/* =========================== SUBCONTRACTOR VIEWS =========================== */
+function myDocs(){return S.docs.filter(d=>d.subId===U.subId)}
+function vSDash(){
+ const s=sub(U.subId),c=compliance(s.id),ds=myDocs();
+ const todo=[];
+ ds.forEach(d=>{const st=docStatus(d);
+  if(d.status==='issued')todo.push({p:-1,t:`Respond to SDC review: ${d.title} Rev ${d.rev}`,s:`SDC gave Status ${d.code} – accept or deny`,st:'awaitsub',on:`openDoc('${d.id}')`,b:'View review'});
+  else if(d.status==='actions')todo.push({p:0,t:`Incorporate SDC comments: ${d.title}`,s:`Status ${d.code} accepted – upload the next revision`,st:'rejected',on:`openForm('${d.type}','${d.id}')`,b:'Upload revision'});
+  else if(st==='rejected')todo.push({p:0,t:`Revise & resubmit: ${d.title}`,s:'SDC returned this as Status C',st,on:`openForm('${d.type}','${d.id}')`,b:'Resubmit'});
+  else if(st==='overdue')todo.push({p:1,t:`Update ${d.title}`,s:`${T(d.type).name} · ${dueText(d.nextDue)}`,st,on:`openForm('${d.type}','${d.id}')`,b:T(d.type).approval?'Upload update':'Log inspection'});
+  else if(st==='defect')todo.push({p:1,t:`Close out defect: ${d.title}`,s:'Last inspection failed',st,on:`openForm('${d.type}','${d.id}')`,b:'Re-inspect'});
+  else if(st==='due')todo.push({p:2,t:`${d.title} due soon`,s:`${T(d.type).name} · ${dueText(d.nextDue)}`,st,on:`openForm('${d.type}','${d.id}')`,b:'Update'})});
+ c.items.filter(i=>i.st==='missing').forEach(i=>todo.push({p:1,t:`Provide ${i.label}`,s:'Required before working on site',st:'missing',on:i.k==='ops'?"go('sops')":`openForm('${i.k}')`,b:'Add now'}));
+ S.ops.filter(o=>o.subId===s.id&&['expired','expiring'].includes(opStatus(o))).forEach(o=>todo.push({p:opStatus(o)==='expired'?0:2,t:`CSCS card – ${o.name}`,s:opStatus(o)==='expired'?'Card expired – operative cannot work':'Expires '+fmt(o.cscsExpiry),st:opStatus(o),on:`editOp('${o.id}')`,b:'Update card'}));
+ const rs=S.invites.filter(i=>i.subId===s.id&&['resign','expired'].includes(inviteState(i)));
+ if(rs.length)todo.push({p:0,t:`${rs.length} operative(s) need to re-sign the RAMS`,s:'Your RAMS has a new Status A revision',st:'resign',on:"go('sinduct')",b:'Re-send'});
+ const noInv=S.ops.filter(o=>o.subId===s.id&&!opInvite(o));
+ if(noInv.length&&S.docs.some(d=>d.subId===s.id&&d.type==='ssow'&&approvedVersion(d)))todo.push({p:2,t:`Send induction pack to ${noInv.length} operative(s)`,s:'SDC video + your RAMS to sign before site',st:'pending',on:'openSendInduct()',b:'Send'});
+ todo.sort((a,b)=>a.p-b.p);
+ const feedback=S.msgs.filter(m=>m.subId===s.id&&m.fromSdc).slice(-4).reverse();
+ const col=c.score>=75?'green':c.score>=50?'amber':'red';
+ return `<div class="banner"><div style="flex:1"><h2>Welcome, ${esc(s.name)}</h2><p>${esc(S.project.name)} · ${esc(S.project.number)} · ${esc(S.project.location)}</p></div><button class="btn" onclick="openSendInduct()">🎬 Send induction pack</button><button class="btn pri" onclick="go('ssubmit')">➕ Submit / update a document</button></div>
+ ${s.site!=='on site'?`<div class="card" style="margin-bottom:16px;background:#f6f3fc">ℹ️ SDC currently has you marked as <b>${esc(s.site)}</b>. Reminders are paused until you're back on site.</div>`:''}
+ <div class="grid" style="grid-template-columns:280px 1fr">
+  <div class="card" style="text-align:center"><h3 style="justify-content:center">Your paperwork</h3><div class="ring" style="background:conic-gradient(var(--${col}) ${c.score*3.6}deg,#edf0f4 0)"><div><span><b>${c.score}%</b><span class="small mut">in date</span></span></div></div>
+   <div style="text-align:left;margin-top:12px">${c.items.map(i=>`<div class="list-item"><div class="grow small">${esc(i.label)}</div>${pill(i.st)}</div>`).join('')}</div></div>
+  <div class="card"><h3>✅ Your to-do list <span class="pill p-${todo.length?'red':'green'}">${todo.length}</span></h3>
+   ${todo.map(x=>`<div class="list-item"><div class="grow"><div class="t">${esc(x.t)}</div><div class="s">${esc(x.s)}</div></div>${pill(x.st)}<button class="btn sm pri" onclick="${x.on}">${x.b}</button></div>`).join('')||'<div class="empty">🎉 You\'re fully up to date. Nice work.</div>'}</div></div>
+ <div class="grid g2" style="margin-top:16px"><div class="card"><h3>💬 Latest from SDC<span class="sp"></span><button class="btn sm" onclick="go('smsgs')">All messages</button></h3>${feedback.map(m=>`<div class="list-item"><div class="grow"><div class="s">${esc(m.from)} · ${new Date(m.date).toLocaleDateString('en-GB')}</div><div>${esc(m.text).replace(/\n/g,'<br>')}</div></div></div>`).join('')||'<div class="empty">No messages</div>'}</div>
+ <div class="card"><h3>📅 Your upcoming dates</h3>${calEvents().filter(e=>daysTo(e.d)>=0).sort((a,b)=>a.d.localeCompare(b.d)).slice(0,8).map(e=>`<div class="list-item" style="cursor:pointer" onclick="${e.on}"><span class="tag">${fmt(e.d)}</span><div class="grow t">${esc(e.t.replace(s.name+' – ',''))}</div>${pill(dueStatus(e.d))}</div>`).join('')||'<div class="empty">Nothing scheduled</div>'}</div></div>`;
+}
+function vSReviews(){
+ const ds=myDocs().filter(d=>T(d.type).sheet&&(d.review||d.status==='submitted'||d.status==='disputed')).sort((a,b)=>(a.status==='issued'?-1:0)-(b.status==='issued'?-1:0));
+ return `<p class="mut">Every RAMS you upload is reviewed by SDC on the <b>Contractor SoW Review & Tracking Form</b>. When SDC issues a review you get a 🔔 notification – open it, read every comment and <b>Accept</b> or <b>Deny</b>.</p>
+ <div class="tbl-wrap"><table><tr><th>RAMS</th><th>Rev</th><th>Uploaded</th><th>SDC status</th><th>Reviewed by</th><th>Where it's at</th><th></th></tr>
+ ${ds.map(d=>`<tr class="click" onclick="openDoc('${d.id}')"><td><b>${esc(d.title)}</b> ${d.sample?'<span class="tag sample">sample</span>':''}</td><td>${esc(d.rev)}</td><td>${fmt(d.submitted)}</td><td>${d.review&&d.status!=='submitted'?`<span class="tag">Status ${esc(d.review.status)}</span>`:'—'}</td><td>${esc(d.review&&d.status!=='submitted'?d.review.reviewer:'')}</td><td>${pill(docStatus(d))}</td><td>${d.status==='issued'?'<button class="btn sm pri">Accept / deny</button>':''}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">No reviews yet – upload your RAMS from "Submit / update".</td></tr>'}</table></div>`;
+}
+function vSDocs(){
+ const ds=myDocs();const cats=[...new Set(TYPES.map(t=>t.cat))];
+ return cats.map(c=>{const ts=TYPES.filter(t=>t.cat===c);const list=ds.filter(d=>ts.some(t=>t.id===d.type));
+  return `<div class="card" style="margin-bottom:14px"><h3>${esc(c)}<span class="sp"></span>${ts.map(t=>`<button class="btn sm" onclick="openForm('${t.id}')">➕ ${esc(t.name.replace(' Inspection','').replace(' Insurance',''))}</button>`).join(' ')}</h3>
+  ${list.map(d=>docRow(d,{hideSub:1})).join('')||'<div class="empty">Nothing submitted yet</div>'}</div>`}).join('');
+}
+function vSSubmit(){
+ return `<p class="mut">Choose what you're submitting. Upload RAMS <b>at least 2 weeks before your start date</b> so SDC can review it. If you're updating an existing document, open it from <b>My documents</b> and choose <b>Upload new revision</b> so the history is kept.</p>
+ ${[...new Set(TYPES.map(t=>t.cat))].map(c=>`<h3 style="margin:18px 0 10px">${esc(c)}</h3><div class="typecards">${TYPES.filter(t=>t.cat===c).map(t=>`<div class="typecard" onclick="openForm('${t.id}')"><div class="ic">${t.icon}</div><b>${esc(t.name)}</b><small>${esc(t.desc)}</small>${t.req?'<div style="margin-top:6px"><span class="tag">Required</span></div>':''}</div>`).join('')}</div>`).join('')}`;
+}
+function fieldHTML(f,val){
+ const id='f_'+f.k,r=f.req?' <b class="req">*</b>':'';
+ if(val===undefined&&f.def==='today')val=iso(TODAY());
+ switch(f.t){
+  case 'textarea':return `<label class="fld full"><span>${esc(f.l)}${r}</span><textarea id="${id}" rows="3" placeholder="${esc(f.ph||'')}">${esc(val||'')}</textarea></label>`;
+  case 'checks':return `<div class="fld full"><span>${esc(f.l)}${r}</span><div class="checks">${f.o.map(o=>`<label class="chk"><input type="checkbox" name="${id}" value="${esc(o)}" ${(val||[]).includes(o)?'checked':''}>${esc(o)}</label>`).join('')}</div></div>`;
+  case 'select':return `<label class="fld"><span>${esc(f.l)}${r}</span><select id="${id}"><option value="">Select…</option>${f.o.map(o=>`<option ${val===o?'selected':''}>${esc(o)}</option>`).join('')}</select></label>`;
+  case 'file':return `<label class="fld full"><span>${esc(f.l)}</span><input type="file" id="${id}" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xlsx">${val&&val.name?`<small class="mut">Current file: ${esc(val.name)} (leave blank to keep)</small>`:''}</label>`;
+  case 'declare':return `<label class="fld full declare"><input type="checkbox" id="${id}"> <span style="font-weight:400">${esc(f.l)}${r}</span></label>`;
+  default:return `<label class="fld"><span>${esc(f.l)}${r}</span><input type="${f.t}" id="${id}" value="${esc(val||'')}" placeholder="${esc(f.ph||'')}"></label>`;
+ }
+}
+function openForm(type,docId){
+ const t=T(type),d=docId?S.docs.find(x=>x.id===docId):null,fields=FORMS[type];
+ const pre=d?{...d.data}:{};if(d&&!t.approval){['date','result','defects','action','file'].forEach(k=>delete pre[k])}if(d)delete pre.changes;
+ const sdcCom=d&&d.review&&['actions','rejected'].includes(d.status)?(d.review.comments||'')+' '+RS.flatMap((sec,si)=>sec.i.map((txt,ii)=>({k:si+'_'+ii,txt}))).filter(x=>d.review.items[x.k]&&d.review.items[x.k].v==='N').map(x=>'• '+x.txt+' – '+d.review.items[x.k].c).join(' '):'';
+ openModal(`<div class="mh"><span style="font-size:24px">${t.icon}</span><h3>${d?(t.approval?'New revision – ':'New entry – ')+esc(d.title):'New '+esc(t.name)}</h3>${d&&t.approval?`<span class="tag">Rev ${esc(d.rev)} → ${nextRev(d.rev)}</span>`:''}<button class="btn ghost" onclick="closeModal()">✕</button></div>
+ <div class="mb">${sdcCom.trim()?`<div class="card" style="background:#fde8e7;border-color:#f6c2bf;margin-bottom:14px"><b>SDC comments to incorporate:</b> ${esc(sdcCom)}</div>`:''}
+ ${d&&type==='ssow'?'<div class="card" style="background:#e6f0fb;border-color:#b9d3f1;margin-bottom:14px">ℹ️ SDC will be notified to review this revision. Once you accept Status A, operatives who signed the old version will be flagged to re-sign.</div>':''}
+ <p class="mut small" style="margin-top:0">${esc(t.desc)}${t.approval?' – SDC is notified as soon as you submit.':' – logged straight to your record and visible to SDC.'}</p>
+ <div class="form">${fields.map(f=>fieldHTML(f,pre[f.k])).join('')}</div></div>
+ <div class="mf"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn pri" onclick="submitForm('${type}','${docId||''}')">${t.approval?'Submit to SDC for review':'Save entry'}</button></div>`,true);
+}
+function fileToData(f){return new Promise(r=>{if(f.size>700000)return r(null);const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)})}
+async function submitForm(type,docId){
+ const t=T(type),fields=FORMS[type],d=docId?S.docs.find(x=>x.id===docId):null,data={};
+ for(const f of fields){const el=$('f_'+f.k);
+  if(f.t==='checks')data[f.k]=[...document.querySelectorAll(`input[name="f_${f.k}"]:checked`)].map(x=>x.value);
+  else if(f.t==='file'){const fl=el.files[0];data[f.k]=fl?{name:fl.name,size:fl.size,data:await fileToData(fl)}:(d&&t.approval?d.data[f.k]:undefined)}
+  else if(f.t==='declare')data[f.k]=el.checked;
+  else data[f.k]=el.value.trim();
+  const v=data[f.k];if(f.req&&(!v||(Array.isArray(v)&&!v.length)))return toast(`"${f.l.slice(0,40)}" is required`,'err');}
+ if(type==='ssow'&&data.start&&daysTo(data.start)<14&&!confirm(`Proposed start is ${daysTo(data.start)} days away – SDC asks for RAMS at least 14 days before starting. Work cannot start until Status A. Submit anyway?`))return;
+ const title=t.titleKey?data[t.titleKey]:t.name;const today=iso(TODAY());
+ let doc=d;
+ if(!doc){doc={id:uid(),subId:U.subId,type,title,rev:'',status:'',history:[],comments:[],reviewLog:[],periodic:[],siteFlag:''};S.docs.push(doc)}
+ else doc.history.push({rev:doc.rev,status:doc.status,code:doc.code,reviewed:doc.reviewed,reviewer:doc.reviewer,nextDue:doc.nextDue,data:doc.data,date:doc.submitted});
+ doc.title=title;doc.data=data;doc.submitted=today;doc.sample=0;doc.siteFlag='';
+ if(t.approval){doc.rev=d?nextRev(d.rev):'A';doc.status='submitted';if(t.expiry&&!d)doc.nextDue=data.expiry;
+  const s=sub(U.subId);
+  notify('sdc',`${s.name} uploaded "${title}" Rev ${doc.rev} – ${t.sheet?'SoW review':'review'} required${data.start?' (start '+fmt(data.start)+')':''}`,`openDoc('${doc.id}')`,'📥');}
+ else{doc.status='logged';doc.reviewed=data.date;doc.nextDue=addDays(data.date,S.freq[type]||t.freq);doc.reviewer=''}
+ if(data.result&&data.result.startsWith('Fail')){S.msgs.push({id:uid(),subId:U.subId,from:U.name,fromSdc:false,date:new Date().toISOString(),text:`⚠️ Failed inspection: ${title} – ${data.defects||''} Action: ${data.action||''}`});notify('sdc',`⚠️ ${U.name}: failed inspection – ${title}`,`openDoc('${doc.id}')`,'⚠️')}
+ audit(`${t.approval?'Submitted':'Logged'} ${t.name} – ${title}${doc.rev?' Rev '+doc.rev:''}`);save();closeModal();go('sdocs');
+ toast(t.approval?'Submitted – SDC has been notified to review it':'Saved – next due '+fmt(doc.nextDue));
+ if(t.approval&&S.project.sdcEmail&&confirm(`Also email the SDC review team (${S.project.sdcEmail})?`))mailto(S.project.sdcEmail,`${S.project.name} – ${U.name} – ${title} Rev ${doc.rev} for review`,`Hi,\n\n${U.name} has uploaded ${title} Rev ${doc.rev} to the SDC Supply Chain Portal for review.${data.start?'\nProposed start: '+fmt(data.start):''}\n\nThanks`);
+}
+function vSOps(){
+ const ops=S.ops.filter(o=>o.subId===U.subId);
+ return `<div class="toolbar"><span class="mut">Register everyone working on site, then send them the pre-site induction pack.</span><span class="sp"></span><button class="btn" onclick="openSendInduct()">🎬 Send induction pack</button><button class="btn pri" onclick="editOp()">➕ Add operative</button></div>
+ <div class="tbl-wrap"><table><tr><th>Name</th><th>Role</th><th>Card type</th><th>Card no.</th><th>Expiry</th><th>Other tickets</th><th>Pre-site (video + RAMS)</th><th>SDC induction</th><th>Card</th><th></th></tr>
+ ${ops.map(o=>`<tr><td><b>${esc(o.name)}</b></td><td>${esc(o.role)}</td><td>${esc(o.cscsType)}</td><td>${esc(o.cscsNo)}</td><td>${fmt(o.cscsExpiry)}</td><td>${esc(o.certs)}</td><td>${opInvitePill(o)}</td><td>${o.inducted?'✅ '+fmt(o.inductionDate):'⏳ Pending'}</td><td>${pill(opStatus(o))}</td><td><button class="btn sm" onclick="editOp('${o.id}')">Edit</button></td></tr>`).join('')||'<tr><td colspan="10" class="empty">No operatives yet</td></tr>'}</table></div>`;
+}
+function editOp(id){
+ const o=id?S.ops.find(x=>x.id===id):{name:'',role:'',cscsType:'',cscsNo:'',cscsExpiry:'',certs:'',email:'',phone:''};
+ const canEdit=U.kind==='sub';
+ openModal(`<div class="mh"><h3>👷 ${id?esc(o.name):'Add operative'}</h3><button class="btn ghost" onclick="closeModal()">✕</button></div><div class="mb"><div class="form">
+ <label class="fld"><span>Full name *</span><input id="oN" value="${esc(o.name)}"></label><label class="fld"><span>Role / trade</span><input id="oR" value="${esc(o.role)}"></label>
+ <label class="fld"><span>Email</span><input id="oEm" value="${esc(o.email||'')}"></label><label class="fld"><span>Mobile</span><input id="oPh" value="${esc(o.phone||'')}"></label>
+ <label class="fld"><span>Card type</span><select id="oT">${CARDS.map(x=>`<option ${o.cscsType===x?'selected':''}>${x}</option>`).join('')}</select></label>
+ <label class="fld"><span>Card number</span><input id="oNo" value="${esc(o.cscsNo)}"></label><label class="fld"><span>Card expiry *</span><input type="date" id="oE" value="${esc(o.cscsExpiry)}"></label>
+ <label class="fld"><span>Other tickets (IPAF, PASMA, SMSTS…)</span><input id="oC" value="${esc(o.certs)}"></label></div></div>
+ <div class="mf">${id&&canEdit?`<button class="btn bad" style="margin-right:auto" onclick="S.ops=S.ops.filter(x=>x.id!=='${id}');save();closeModal();render()">Remove</button>`:''}<button class="btn" onclick="closeModal()">Close</button>${canEdit?`<button class="btn pri" onclick="saveOp('${id||''}')">Save</button>`:''}</div>`);
+}
+function saveOp(id){const n=$('oN').value.trim(),e=$('oE').value;if(!n||!e)return toast('Name and card expiry required','err');let o=id?S.ops.find(x=>x.id===id):null;if(!o){o={id:uid(),subId:U.subId,inducted:false,inductionDate:''};S.ops.push(o)}Object.assign(o,{name:n,role:$('oR').value,email:$('oEm').value,phone:$('oPh').value,cscsType:$('oT').value,cscsNo:$('oNo').value,cscsExpiry:e,certs:$('oC').value,sample:0});audit(`${id?'Updated':'Added'} operative ${n}`);save();closeModal();render();toast('Saved')}
+function vSMsgs(){S.msgs.filter(m=>m.subId===U.subId&&m.fromSdc).forEach(m=>m.readSub=1);save();return `<div class="card">${threadHTML(U.subId,false)}</div>`}
+function vSProfile(){const s=sub(U.subId);return `<div class="card" style="max-width:640px"><h3>🏢 Company details</h3><div class="form">
+ <label class="fld"><span>Company</span><input value="${esc(s.name)}" disabled></label><label class="fld"><span>Trade / package</span><input id="pT" value="${esc(s.trade)}"></label>
+ <label class="fld"><span>Contact name</span><input id="pC" value="${esc(s.contact)}"></label><label class="fld"><span>Email</span><input id="pE" value="${esc(s.email)}"></label>
+ <label class="fld"><span>Phone</span><input id="pP" value="${esc(s.phone)}"></label><label class="fld"><span>Change PIN</span><input id="pK" type="password" placeholder="Leave blank to keep"></label></div><br>
+ <button class="btn pri" onclick="saveProfile()">Save</button></div>`}
+function saveProfile(){const s=sub(U.subId);Object.assign(s,{trade:$('pT').value,contact:$('pC').value,email:$('pE').value,phone:$('pP').value});if($('pK').value)s.pin=$('pK').value;audit('Updated company profile');save();toast('Profile saved')}
+
+/* ---------- boot ---------- */
+function boot(){const m=location.hash.match(/^#induct=(\w+)/);if(m){return renderOperative(m[1])}render();primeSeen()}
+window.addEventListener('hashchange',boot);
+boot();
+save();
+</script>
+</body>
+</html>
